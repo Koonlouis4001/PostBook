@@ -39,11 +39,15 @@ export class PostsService {
   }
 
   async findAll() {
-    return await this.postRepository.find();
+    const response = await this.postRepository.find();
+    console.log(response);
+    return response;
   }
 
   async findOne(id: number) {
-    return await this.postRepository.findOneBy({id});
+    const response = await this.postRepository.findOneBy({id});
+    console.log(response);
+    return response;
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
