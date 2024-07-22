@@ -5,17 +5,17 @@ import './App.css';
 import Navbar from './Navbar';
 import Input from './Input';
 import Post from './Post';
-import ApiConnect from './ApiConnect';
+import ApiConnection from './ApiConnection';
 
 let id = 1;
 
 function App() {
   const [posts,setPosts] = useState([]);
 
-  const apiConnect = new ApiConnect();
+  const apiConnection = new ApiConnection();
 
   const refreshPosts = async () => {
-    let data = await apiConnect.getAllData();
+    let data = await apiConnection.getAllData("http://localhost:3000/posts/");
     console.log(data);
     if(data != undefined) {
       setPosts(data);
@@ -23,7 +23,13 @@ function App() {
   }
 
   const addNewPost = async (post) => {
-    let data = await apiConnect.postData(post);
+    let data = await apiConnection.postData("http://localhost:3000/posts/",post);
+    console.log(data);
+    refreshPosts();
+  }
+
+  const deleteSelectedPost = async (id) => {
+    let data = await apiConnection.deleteData(`http://localhost:3000/posts/${id}`);
     console.log(data);
     refreshPosts();
   }
@@ -41,15 +47,14 @@ function App() {
   }
 
   function deletePost(id) {
-    const afterPosts = posts.filter((post) => (post.id != id))
-    setPosts(afterPosts);
+    deleteSelectedPost(id);
   }
 
   return (
     <div className="App">
       <Navbar/>
       <Input addPost={addPost}/>
-      {posts?.map((post) => (<Post title={post?.title} id={post?.id} deletePost={deletePost} key={post?.id}/>))}
+      {posts?.map((post) => (<Post post={post} deletePost={deletePost} key={post?.id}/>))}
     </div>
   );
 }
