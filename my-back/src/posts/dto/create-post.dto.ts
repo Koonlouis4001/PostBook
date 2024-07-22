@@ -1,19 +1,25 @@
-import { IsDate, IsInt, IsNotEmpty, IsString, isString } from "class-validator";
+import { Type } from "class-transformer";
+import { ArrayNotEmpty, IsArray, IsDate, IsDateString, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Profile } from "src/profile/entities/profile.entity";
 
 export class CreatePostDto {
     @IsString()
     @IsNotEmpty()
-    title: string;
+    readonly title: string;
 
-    @IsDate()
+    @IsDateString()
     @IsNotEmpty()
-    created: Date;
+    readonly created: Date;
 
-    @IsDate()
+    @IsDateString()
     @IsNotEmpty()
-    modified: Date;
+    readonly modified: Date;
 
-    @IsInt()
+    @IsNumber()
     @IsNotEmpty()
-    likes: number;
+    readonly likes: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    profile: number;
 }

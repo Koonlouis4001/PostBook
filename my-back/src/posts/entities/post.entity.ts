@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { profile } from "console";
+import { Profile } from "src/profile/entities/profile.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, TableForeignKey } from "typeorm";
 
 @Entity({ name: 'posts' })
 export class Post {
@@ -16,5 +18,14 @@ export class Post {
 
     @Column({ type: 'int', name: 'likes' })
     likes: number;
+
+    @ManyToOne(() => Profile, (profile) => profile.posts, {
+        orphanedRowAction: 'delete',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+        nullable: true
+      })
+    @JoinColumn({ name: 'profile_fk' })
+    profile: Profile; 
 }
 

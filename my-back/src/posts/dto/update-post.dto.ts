@@ -1,12 +1,15 @@
-import { IsDate, IsInt, IsNotEmpty, IsString, isString } from "class-validator";
+import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdatePostDto {
     @IsString()
-    title?: string;
+    @IsOptional()
+    readonly title?: string;
 
-    @IsInt()
-    likes?: number;
+    @IsNumber()
+    @IsOptional()
+    readonly likes?: number;
 
-    @IsDate()
-    modified?: Date;
+    @IsDateString()
+    @IsOptional()
+    readonly modified?: Date;
 }
