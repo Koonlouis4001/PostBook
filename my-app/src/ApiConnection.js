@@ -16,6 +16,14 @@ class ApiConnection {
     }
   }
 
+  async updateData(url,data) {
+    let response = await axios.patch(url,data,{headers: {'Content-Type': 'application/json'}});
+    console.log(response);
+    if(response.status == '200') {
+      return response.data;
+    }
+  }
+
   async deleteData(url) {
     let response = await axios.delete(url,{headers: {'Content-Type': 'application/json'}});
     console.log(response);

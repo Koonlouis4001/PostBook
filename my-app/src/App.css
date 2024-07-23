@@ -12,6 +12,8 @@ body {
   color: #ffffff;
   padding: 10px;
   background: #4167b2;
+  display: flex;
+  justify-content: space-between;
 }
 
 .Input, .Post {
@@ -52,4 +54,14 @@ body {
 .Post__image {
   width: 100%;
   margin-top: 15px;
+}
+
+.Page__Link {
+  padding: 0px 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.Post__delete {
+  
 }
