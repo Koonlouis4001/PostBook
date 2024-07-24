@@ -62,6 +62,54 @@ body {
   text-decoration: none;
 }
 
-.Post__delete {
-  
+.Post__menu {
+  padding-left: auto;
+}
+
+.Post__header {
+  width: 100%;
+}
+
+.Popup {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.Popup_Header {
+  text-align: center;
+  padding: 10px 20px;
+}
+
+.Box {
+  position: relative;
+  width: 50%;
+  min-height: 100px;
+  background-color: #fff;
+  border: 1px solid #999;
+  border-radius: 4px;
+  margin: 20px auto;
+}
+
+.Popup_Button {
+  display: flex;
+  padding: 0px 20px;
+  margin-left: auto;
+  text-align: center;
+  justify-content: space-evenly;
+}
+
+.btn-close {
+  min-width: 60px;
+  min-height: 25px;
+  padding: 0px 20px;
+}
+
+.btn-delete {
+  min-width: 60px;
+  min-height: 25px;
+  padding: 0px 20px;
 }
