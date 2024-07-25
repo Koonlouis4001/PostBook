@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import Button from 'react-bootstrap/Button';
@@ -9,7 +9,29 @@ function Post({post,deletePost,updatePost}) {
     const [updateMenu,setUpdateMenu] = useState(false);
     const [deleteMenu,setDeleteMenu] = useState(false);
 
-    const deleteWindow = () => {
+    const [newPost,setNewPost] = useState(post);
+
+    function handleChange(event) {
+        setNewPost({...newPost,[event.target.name] : event.target.value});
+    }
+
+    function updateWindow() {
+        return (
+            <div className="Popup">
+                <div className="Box">
+                    <div className="Popup_Input">
+                        Title : <input type="text" name="title" value={newPost.title} onChange={(e) => handleChange(e,"title")}/>
+                    </div>
+                    <div  className="Popup_Button">
+                        <button className="btn-delete" onClick={()=>updatePost(newPost)}>Update</button>
+                        <button className="btn-close" onClick={()=>setUpdateMenu(false)}>Close</button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    function deleteWindow() {
         return (
             <div className="Popup">
                 <div className="Box">
@@ -28,8 +50,10 @@ function Post({post,deletePost,updatePost}) {
 
     return (
         <div className="Post">
+            {updateMenu && updateWindow()}
             {deleteMenu && deleteWindow()}
             <div className="Post__header">
+                <div className="Post__profile">Profile : </div>
                 <button className="Post__menu" onClick={() => setShowMenu(!showMenu)}>...</button>
                 {showMenu && 
                 <div style={{display:"flex"}}>

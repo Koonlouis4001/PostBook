@@ -29,7 +29,9 @@ function PostPage() {
   }
 
   const updatePost = async (post) => {
-    let data = await apiConnection.updateData("http://localhost:3000/posts/",post);
+    let updatedPost = {...post,modified: new Date()}
+    console.log(updatePost);
+    let data = await apiConnection.patchData(`http://localhost:3000/posts/${post.id}`,updatedPost);
     console.log(data);
     refreshPosts();
   }
