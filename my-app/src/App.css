@@ -89,6 +89,26 @@ body {
   display: flex;
 }
 
+.Popup_Title {
+  padding-right: 10px;
+  width: 90px;
+}
+
+.Popup_Box {
+  width: 100%;
+  padding: 0 10px;
+}
+
+.Popup_Input {
+  padding: 10px 0;
+  grid-template-columns: 10% 80%;
+  display: grid;
+
+  gap: 20px;
+  width: 80%;
+  margin: 0 auto;
+}
+
 .Box {
   position: relative;
   width: 50%;
@@ -97,6 +117,7 @@ body {
   border: 1px solid #999;
   border-radius: 4px;
   margin: 20px auto;
+  padding: 10px 0;
 }
 
 .Popup_Button {
@@ -117,4 +138,16 @@ body {
   min-width: 60px;
   min-height: 25px;
   padding: 0px 20px;
+}
+
+.login-window {
+  padding: 10px 10px;
+  min-width: 400px;
+  width: 30%;
+  background-color: white;
+}
+
+.login-input {
+  display: flex;
+  width: 100%;
 }

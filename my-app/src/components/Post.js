@@ -20,7 +20,8 @@ function Post({post,deletePost,updatePost}) {
             <div className="Popup">
                 <div className="Box">
                     <div className="Popup_Input">
-                        Title : <input type="text" name="title" value={newPost.title} onChange={(e) => handleChange(e,"title")}/>
+                        <div className="Popup_Title">Title</div>
+                        <input className="Popup_Box" type="text" name="title" value={newPost.title} onChange={(e) => handleChange(e)}/>
                     </div>
                     <div  className="Popup_Button">
                         <button className="btn-delete" onClick={()=>updatePost(newPost)}>Update</button>
