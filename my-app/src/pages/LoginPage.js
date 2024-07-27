@@ -7,15 +7,14 @@ const LoginPage = () => {
 
   const [registerMenu,setRegisterMenu] = useState(false);
 
-  const [user,setUser] = useState({
+  const [modelUser,setModelUser] = useState({
     userName: '',
     password: ''
   });
 
-  const [registerUser,setRegisterUser] = useState({
-    userName: '',
-    password: ''
-  });
+  const [user,setUser] = useState(modelUser);
+
+  const [registerUser,setRegisterUser] = useState(modelUser);
 
   function registerWindow() {
     return (
@@ -23,11 +22,11 @@ const LoginPage = () => {
             <div className="Box">
                 <div className="Popup_Input">
                   <div className="Popup_Title">Username</div>
-                  <input className="Popup_Box" type="text" name="userName" value={registerUser.title} onChange={(e) => handleChange(e,registerUser)}/>
+                  <input className="Popup_Box" type="text" name="userName" value={registerUser.userName} onChange={(e) => handleChange(e,registerUser,setRegisterUser)}/>
                 </div>
                 <div className="Popup_Input">
                   <div className="Popup_Title">Password</div>
-                  <input className="Popup_Box" type="password" name="password" value={registerUser.title} onChange={(e) => handleChange(e,registerUser)}/>
+                  <input className="Popup_Box" type="password" name="password" value={registerUser.password} onChange={(e) => handleChange(e,registerUser,setRegisterUser)}/>
                 </div>
                 <div  className="Popup_Button">
                     <button className="btn-delete" onClick={()=>register()}>Register</button>
@@ -40,18 +39,21 @@ const LoginPage = () => {
 
   async function register() {
     if(registerUser.userName != undefined && registerUser.password != undefined) {
-      let data = await apiConnection.postData("http://localhost:3000/user/",registerUser);
-      console.log(data);
+      let preRegister = {...registerUser,created: new Date(),modified: new Date()}
+      let data = await apiConnection.postData("http://localhost:3000/authen/sign-up",preRegister);
+      if(data != undefined) {
+        setRegisterMenu(false);
+      }
     }
   }
 
-  function handleChange(event,model) {
-    setUser({...model,[event.target.name] : event.target.value});
+  function handleChange(event,model,set) {
+    set({...model,[event.target.name] : event.target.value});
   }
 
   useEffect(()=> {
-    console.log(user);
-  },[user])
+    setRegisterUser(modelUser);
+  },[registerMenu])
 
   return (
     <div className="login-window">

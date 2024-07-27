@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Post } from "src/posts/entities/post.entity";
+import { User } from "src/user/entities/user.entity";
 
 @Entity({ name: 'profile' })
 export class Profile {
@@ -25,4 +26,8 @@ export class Profile {
       })
     @JoinColumn({name:'post_fk'})
     posts: Post[];
+
+    @OneToOne(()=>User)
+    @JoinColumn({name:'user_fk'})
+    user: User;
 }
