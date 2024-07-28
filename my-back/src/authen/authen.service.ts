@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthenService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    //private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signUp(signUpAuthenDto: SignUpAuthenDto) {
@@ -23,8 +23,9 @@ export class AuthenService {
     signUpUser.created = signUpAuthenDto.created;
     signUpUser.modified = signUpAuthenDto.modified;
     const user = await this.userRepository.create(signUpUser);
-    //const token = this.jwtService.sign({id: user.id});
-    return await this.userRepository.save(user)
+    await this.userRepository.save(user)
+    const token = this.jwtService.sign({id: user.id});
+    return token;
   }
 
   async login(loginAuthenDto: LoginAuthenDto) {
@@ -39,7 +40,7 @@ export class AuthenService {
     if(!isPasswordMatched) {
       throw new UnauthorizedException('Invalid username or password');
     }
-    //const token = this.jwtService.sign({id: user.id});
-    return user;
+    const token = this.jwtService.sign({id: user.id});
+    return token;
   }
 }

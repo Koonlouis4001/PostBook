@@ -37,6 +37,13 @@ const LoginPage = () => {
     )
   }
 
+  async function login() {
+    if(user.userName != undefined && user.password != undefined) {
+      let data = await apiConnection.postData("http://localhost:3000/authen/login",user);
+      console.log(data)
+    }
+  }
+
   async function register() {
     if(registerUser.userName != undefined && registerUser.password != undefined) {
       let preRegister = {...registerUser,created: new Date(),modified: new Date()}
@@ -62,9 +69,10 @@ const LoginPage = () => {
             Login
         </div>
         <div className="">
-          <input type="text" name="userName" value={user.title} onChange={(e) => handleChange(e,user)}/>
-          <input type="password" name="password" value={user.password} onChange={(e) => handleChange(e,user)}/>
+          <input type="text" name="userName" value={user.title} onChange={(e) => handleChange(e,user,setUser)}/>
+          <input type="password" name="password" value={user.password} onChange={(e) => handleChange(e,user,setUser)}/>
         </div>
+        <button onClick={()=>login()}>Login</button>
         <div onClick={()=>setRegisterMenu(true)}>Register New User</div>
     </div>
   );
