@@ -13,7 +13,7 @@ function PostPage() {
   const apiConnection = new ApiConnection();
 
   const refreshPosts = async () => {
-    let data = await apiConnection.getAllData("http://localhost:3000/posts/");
+    let data = await apiConnection.getData("http://localhost:3000/posts/");
     console.log(data);
     if(data != undefined) {
       setPosts(data);

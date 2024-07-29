@@ -7,6 +7,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { jwtConstants } from './constants';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [JwtModule.register({
@@ -14,6 +15,7 @@ import { jwtConstants } from './constants';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '1d' },
     }),
+    UserModule,
     TypeOrmModule.forFeature([User])],
   controllers: [AuthenController],
   providers: [AuthenService],

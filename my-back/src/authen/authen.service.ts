@@ -40,7 +40,7 @@ export class AuthenService {
     if(!isPasswordMatched) {
       throw new UnauthorizedException('Invalid username or password');
     }
-    const token = this.jwtService.sign({id: user.id});
+    const token = this.jwtService.sign({id: user.id,profile: user.profile,userName: user.userName});
     return token;
   }
 }
