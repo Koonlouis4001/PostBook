@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, Res } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Repository } from 'typeorm';
@@ -6,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
 import { Profile } from 'src/profile/entities/profile.entity';
 import { Response } from 'express';
+import { ResponsePostDto } from './dto/response-post.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PostsService {
@@ -14,9 +16,9 @@ export class PostsService {
     @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
   ) {}
 
-   async create(createPostDto: CreatePostDto,@Res() response: Response) {
+   async create(createPostDto: CreatePostDto,@Res() response: Response): Promise<ResponsePostDto | undefined> {
     var message = "";
-    const post : Post = new Post();
+    const post = new Post();
     post.title = createPostDto.title;
     post.created = createPostDto.created;
     post.modified = createPostDto.modified;
@@ -27,27 +29,26 @@ export class PostsService {
         id: createPostDto.profile
       },
     });
+    console.log(profile);
     if(profile != null) {
       post.profile = profile;
-      await this.postRepository.save(post);
-      return response.status(HttpStatus.OK).send(createPostDto);
+      const createPost = await this.postRepository.save(post);
+      return plainToInstance(ResponsePostDto,createPost);
     }
     else {
       message += `cant find your profile (id = ${createPostDto.profile})`
     }
-    return response.status(HttpStatus.BAD_REQUEST).send(message);
+    throw new HttpException(message, HttpStatus.BAD_REQUEST);
   }
 
   async findAll() {
     const response = await this.postRepository.find();
-    console.log(response);
-    return response;
+    return plainToInstance(ResponsePostDto,response);
   }
 
   async findOne(id: number) {
     const response = await this.postRepository.findOneBy({id});
-    console.log(response);
-    return response;
+    return plainToInstance(ResponsePostDto,response);
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
@@ -56,7 +57,8 @@ export class PostsService {
     post.title = updatePostDto.title;
     post.modified = updatePostDto.modified;
     post.likes = updatePostDto.likes;
-    return await this.postRepository.save(post);
+    const updatePost = await this.postRepository.save(post);
+    return plainToInstance(ResponsePostDto,updatePost);
   }
 
   async remove(id: number) {

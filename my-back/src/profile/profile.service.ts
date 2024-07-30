@@ -4,6 +4,8 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
+import { ResponseProfileDto } from './dto/response-profile.dto';
 
 @Injectable()
 export class ProfileService {
@@ -11,30 +13,34 @@ export class ProfileService {
     @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
   ) {}
 
-  create(createProfileDto: CreateProfileDto): Promise<Profile | undefined> {
+  async create(createProfileDto: CreateProfileDto): Promise<ResponseProfileDto | undefined> {
     const profile : Profile = new Profile();
     profile.profileName = createProfileDto.profileName;
     profile.profileStatus = createProfileDto.profileStatus;
     profile.created = createProfileDto.created;
     profile.modified = createProfileDto.modified;
-    return this.profileRepository.save(profile);
+    const createProfile = await this.profileRepository.save(profile);
+    return plainToInstance(ResponseProfileDto,createProfile);
   }
 
-  findAll(): Promise<Profile[] | undefined> {
-    return this.profileRepository.find();
+  async findAll(): Promise<ResponseProfileDto[] | undefined> {
+    const profiles = await this.profileRepository.find();
+    return plainToInstance(ResponseProfileDto,profiles);
   }
 
-  findOne(id: number): Promise<Profile | undefined> {
-    return this.profileRepository.findOneBy({id});
+  async findOne(id: number): Promise<ResponseProfileDto | undefined> {
+    const profile = await this.profileRepository.findOneBy({id});
+    return plainToInstance(ResponseProfileDto,profile);
   }
 
-  update(id: number, updateProfileDto: UpdateProfileDto): Promise<Profile | undefined> {
+  async update(id: number, updateProfileDto: UpdateProfileDto): Promise<ResponseProfileDto | undefined> {
     const profile : Profile = new Profile();
     profile.id = id;
     profile.profileName = updateProfileDto.profileName;
     profile.profileStatus = updateProfileDto.profileStatus;
     profile.modified = updateProfileDto.modified;
-    return this.profileRepository.save(profile);
+    const updateProfile = await this.profileRepository.save(profile);
+    return plainToInstance(ResponseProfileDto,updateProfile);
   }
 
   remove(id: number): Promise<DeleteResult | undefined> {
