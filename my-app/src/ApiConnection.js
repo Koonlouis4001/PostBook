@@ -1,11 +1,32 @@
 import axios from 'axios'
 
+import { jwtDecode }from 'jwt-decode';
+
+const isTokenExpired = (token) => {
+  if (!token) return true;
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp < currentTime;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return true;
+  }
+};
+
 class ApiConnection {
+  
   isAuthen() {
-    if(localStorage.getItem('token') != null) {
-      return true;
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token');
+      if (isTokenExpired(token)) {
+        localStorage.removeItem('token');
+        window.location.pathname = '/login'
+      }
+    } 
+    else {
+      window.location.pathname = '/login'
     }
-    return false;
   }
 
   async authen(url,data) {
