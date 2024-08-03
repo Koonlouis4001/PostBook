@@ -10,8 +10,8 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Navbar/>
-          <div>
+          {window.location.pathname != '/login' && <Navbar/>}
+          <div className='main-page'>
             <MainPage/>
           </div>
         </div>

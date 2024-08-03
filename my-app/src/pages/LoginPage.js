@@ -67,18 +67,22 @@ const LoginPage = () => {
   },[registerMenu])
 
   return (
-    <div className="login-window">
+    <div className="login-page">
         {registerMenu && registerWindow()}
-        <div>
-            Login
+        <div className="login-window">
+          <div>LOGIN</div>
+          <div>
+            <input className="login-input" type="text" name="userName" placeholder="username" value={user.title} onChange={(e) => handleChange(e,user,setUser)}/>
+          </div>
+          <div>
+            <input className="login-input" type="password" name="password" placeholder="password" value={user.password} onChange={(e) => handleChange(e,user,setUser)}/>
+          </div>
+          {/*<button onClick={()=>getUserWithToken()}>UserData</button>*/}
+          <div style={{display:"flex",alignItems:"center"}}>
+            <button onClick={()=>login()}>Login</button>
+            <div style={{marginLeft:"auto"}} onClick={()=>setRegisterMenu(true)}>Register New User</div>
+          </div>
         </div>
-        <div className="">
-          <input type="text" name="userName" value={user.title} onChange={(e) => handleChange(e,user,setUser)}/>
-          <input type="password" name="password" value={user.password} onChange={(e) => handleChange(e,user,setUser)}/>
-        </div>
-        <button onClick={()=>getUserWithToken()}>UserData</button>
-        <button onClick={()=>login()}>Login</button>
-        <div onClick={()=>setRegisterMenu(true)}>Register New User</div>
     </div>
   );
 };
