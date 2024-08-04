@@ -19,7 +19,7 @@ const LoginWindow = ({setRegisterMenu,modelUser}) => {
   }
     
   return (
-    <div>
+    <div className="login-animation">
       <div className="login-header">LOGIN</div>
       <div className="login-window">
         <div>

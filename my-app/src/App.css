@@ -186,6 +186,16 @@ body {
   padding-top: 10px;
 }
 
+.login-animation {
+  animation-name: login;
+  animation-duration: 1s;
+}
+
+@keyframes login {
+  from {opacity: 0%; transform: translate(100%,0);}
+  to {opacity: 100%; transform: translate(0,0);}
+}
+
 .register-text {
   text-decoration: underline;
 }
