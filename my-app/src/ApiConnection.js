@@ -34,7 +34,7 @@ class ApiConnection {
       return(error.toJSON());
     });
     console.log(response);
-    if(response != null || response != undefined) {
+    if(response !== null || response !== undefined) {
       localStorage.setItem('token', response.data);
       return response.data;
     }
@@ -49,7 +49,7 @@ class ApiConnection {
 
   async getData(url) {
     let response = await axios.get(url,{headers: {'Content-Type': 'application/json'}});
-    if(response.status == '200') {
+    if(response.status === '200') {
       return response.data;
     }
   }
@@ -59,7 +59,7 @@ class ApiConnection {
       return(error.toJSON());
     });
     console.log(response);
-    if(response != null || response != undefined) {
+    if(response !== null || response !== undefined) {
       return response.data;
     }
   }
@@ -67,7 +67,7 @@ class ApiConnection {
   async patchData(url,data) {
     let response = await axios.patch(url,data,{headers: {'Content-Type': 'application/json'}});
     console.log(response);
-    if(response.status == '200') {
+    if(response.status === '200') {
       return response.data;
     }
   }
@@ -75,7 +75,7 @@ class ApiConnection {
   async deleteData(url) {
     let response = await axios.delete(url,{headers: {'Content-Type': 'application/json'}});
     console.log(response);
-    if(response.status == '204') {
+    if(response.status === '204') {
       return response.data;
     }
   }

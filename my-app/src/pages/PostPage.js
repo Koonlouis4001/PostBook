@@ -15,7 +15,7 @@ function PostPage() {
   const refreshPosts = async () => {
     let data = await apiConnection.getData("http://localhost:3000/posts/");
     console.log(data);
-    if(data != undefined) {
+    if(data !== undefined) {
       setPosts(data);
     }
   }
@@ -43,7 +43,7 @@ function PostPage() {
   }
 
   useEffect(()=> {
-    if(posts.length == 0) {
+    if(posts.length === 0) {
       refreshPosts();
     }
   },[posts])

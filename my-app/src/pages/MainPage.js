@@ -8,7 +8,7 @@ import ApiConnection from "../ApiConnection";
 const MainPage = () => {
   const apiConnection = new ApiConnection();
 
-  if(window.location.pathname != '/login') {
+  if(window.location.pathname !== '/login') {
     apiConnection.isAuthen();
   }
 
