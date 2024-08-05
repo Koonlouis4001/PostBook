@@ -1,6 +1,5 @@
 import { Expose, Type } from 'class-transformer';
 import { ResponseProfileDto } from 'src/profile/dto/response-profile.dto';
-import { Profile } from 'src/profile/entities/profile.entity';
 
 export class ResponsePostDto {
   @Expose()
@@ -15,7 +14,7 @@ export class ResponsePostDto {
   @Expose()
   likes: string;
 
-  @Type(()=>ResponseProfileDto)
+  @Type(() => ResponseProfileDto)
   @Expose()
-  Profile: Profile;
+  Profile: ResponseProfileDto;
 }

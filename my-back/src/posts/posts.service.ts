@@ -7,7 +7,7 @@ import { Post } from './entities/post.entity';
 import { Profile } from 'src/profile/entities/profile.entity';
 import { Response } from 'express';
 import { ResponsePostDto } from './dto/response-post.dto';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PostsService {
@@ -16,7 +16,7 @@ export class PostsService {
     @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
   ) {}
 
-   async create(createPostDto: CreatePostDto,@Res() response: Response): Promise<ResponsePostDto | undefined> {
+   async create(createPostDto: CreatePostDto) {
     var message = "";
     const post = new Post();
     post.title = createPostDto.title;
@@ -27,13 +27,13 @@ export class PostsService {
     const profile = await this.profileRepository.findOne({
       where: {
         id: createPostDto.profile
-      },
+      }
     });
-    console.log(profile);
     if(profile != null) {
       post.profile = profile;
-      const createPost = await this.postRepository.save(post);
-      return plainToInstance(ResponsePostDto,createPost);
+      const createPost = await this.postRepository.insert(post);
+      console.log(createPost);
+      return instanceToPlain(post,{ strategy: 'excludeAll'});
     }
     else {
       message += `cant find your profile (id = ${createPostDto.profile})`
@@ -42,13 +42,13 @@ export class PostsService {
   }
 
   async findAll() {
-    const response = await this.postRepository.find();
-    return plainToInstance(ResponsePostDto,response);
+    const response = await this.postRepository.find({ relations: ['profile'] });
+    return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 
   async findOne(id: number) {
     const response = await this.postRepository.findOneBy({id});
-    return plainToInstance(ResponsePostDto,response);
+    return instanceToPlain(response,{strategy: 'excludeAll'});
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
@@ -58,7 +58,7 @@ export class PostsService {
     post.modified = updatePostDto.modified;
     post.likes = updatePostDto.likes;
     const updatePost = await this.postRepository.save(post);
-    return plainToInstance(ResponsePostDto,updatePost);
+    return instanceToPlain(updatePost,{ strategy: 'excludeAll'});
   }
 
   async remove(id: number) {
