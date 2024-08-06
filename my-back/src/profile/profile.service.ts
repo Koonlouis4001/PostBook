@@ -4,8 +4,7 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToInstance } from 'class-transformer';
-import { ResponseProfileDto } from './dto/response-profile.dto';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ProfileService {
@@ -13,34 +12,34 @@ export class ProfileService {
     @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
   ) {}
 
-  async create(createProfileDto: CreateProfileDto): Promise<ResponseProfileDto | undefined> {
+  async create(createProfileDto: CreateProfileDto) {
     const profile : Profile = new Profile();
     profile.profileName = createProfileDto.profileName;
     profile.profileStatus = createProfileDto.profileStatus;
     profile.created = createProfileDto.created;
     profile.modified = createProfileDto.modified;
     const createProfile = await this.profileRepository.save(profile);
-    return plainToInstance(ResponseProfileDto,createProfile);
+    return instanceToPlain(createProfile,{ strategy: 'excludeAll'});
   }
 
-  async findAll(): Promise<ResponseProfileDto[] | undefined> {
-    const profiles = await this.profileRepository.find();
-    return plainToInstance(ResponseProfileDto,profiles);
+  async findAll() {
+    const profiles = await this.profileRepository.createQueryBuilder().orderBy({'Profile.id':'ASC'}).getMany();
+    return instanceToPlain(profiles,{ strategy: 'excludeAll'});
   }
 
-  async findOne(id: number): Promise<ResponseProfileDto | undefined> {
+  async findOne(id: number) {
     const profile = await this.profileRepository.findOneBy({id});
-    return plainToInstance(ResponseProfileDto,profile);
+    return instanceToPlain(profile,{ strategy: 'excludeAll'});
   }
 
-  async update(id: number, updateProfileDto: UpdateProfileDto): Promise<ResponseProfileDto | undefined> {
+  async update(id: number, updateProfileDto: UpdateProfileDto) {
     const profile : Profile = new Profile();
     profile.id = id;
     profile.profileName = updateProfileDto.profileName;
     profile.profileStatus = updateProfileDto.profileStatus;
     profile.modified = updateProfileDto.modified;
     const updateProfile = await this.profileRepository.save(profile);
-    return plainToInstance(ResponseProfileDto,updateProfile);
+    return instanceToPlain(updateProfile,{ strategy: 'excludeAll'});
   }
 
   remove(id: number): Promise<DeleteResult | undefined> {

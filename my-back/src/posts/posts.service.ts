@@ -5,9 +5,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
 import { Profile } from 'src/profile/entities/profile.entity';
-import { Response } from 'express';
-import { ResponsePostDto } from './dto/response-post.dto';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class PostsService {
@@ -31,9 +29,8 @@ export class PostsService {
     });
     if(profile != null) {
       post.profile = profile;
-      const createPost = await this.postRepository.insert(post);
-      console.log(createPost);
-      return instanceToPlain(post,{ strategy: 'excludeAll'});
+      const createPost = await this.postRepository.save(post);
+      return instanceToPlain(createPost,{ strategy: 'excludeAll'});
     }
     else {
       message += `cant find your profile (id = ${createPostDto.profile})`
@@ -42,7 +39,7 @@ export class PostsService {
   }
 
   async findAll() {
-    const response = await this.postRepository.find({ relations: ['profile'] });
+    const response = await this.postRepository.createQueryBuilder().orderBy({'Post.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 
