@@ -1,4 +1,5 @@
 import { Expose, Type } from "class-transformer";
+import { IsOptional } from "class-validator";
 import { profile } from "console";
 import { Profile } from "src/profile/entities/profile.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, TableForeignKey } from "typeorm";
@@ -34,5 +35,9 @@ export class Post {
     @JoinColumn({ name: 'profile_fk' })
     @Expose()
     profile: Profile; 
+
+    @Column({type: 'bytea',nullable: true})
+    @Expose()
+    picture: Buffer;
 }
 

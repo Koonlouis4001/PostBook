@@ -49,11 +49,17 @@ export class PostsService {
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
-    const post : Post = new Post();
-    post.id = id;
+    const post = await this.postRepository.findOneBy({id});
     post.title = updatePostDto.title;
     post.modified = updatePostDto.modified;
     post.likes = updatePostDto.likes;
+    const updatePost = await this.postRepository.save(post);
+    return instanceToPlain(updatePost,{ strategy: 'excludeAll'});
+  }
+
+  async upload(id:number,file: Express.Multer.File) {
+    const post = await this.postRepository.findOneBy({id});
+    post.picture = file.buffer;
     const updatePost = await this.postRepository.save(post);
     return instanceToPlain(updatePost,{ strategy: 'excludeAll'});
   }
