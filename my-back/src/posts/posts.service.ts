@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Res, StreamableFile } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Repository } from 'typeorm';
@@ -62,6 +62,20 @@ export class PostsService {
     post.picture = file.buffer;
     const updatePost = await this.postRepository.save(post);
     return instanceToPlain(updatePost,{ strategy: 'excludeAll'});
+  }
+
+  async preview(id:number): Promise<StreamableFile> {
+    var message = "";
+    const post = await this.postRepository.findOneBy({id});
+    if(post === null) {
+      message += `cant find your post (id = ${id})`
+      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+    }
+    if(post.picture === null) {
+      message += `cant find your post picture (id = ${id})`
+      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+    }
+    return new StreamableFile(post.picture);
   }
 
   async remove(id: number) {

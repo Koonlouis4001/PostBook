@@ -51,6 +51,19 @@ class ApiConnection {
     return response;
   }
 
+  async getFile(url) {
+    let authorizationToken = await this.getAuthorization();
+    let response = await axios.get(url,{headers: {'Content-Type': 'multipart/form-data',Authorization: authorizationToken},responseType: "blob"}).catch(error => {
+      console.error(error);
+    });
+    if(response === undefined) {
+      return response;
+    }
+    if(response?.status === 200) {
+      return response.data;
+    }
+  }
+
   async getData(url) {
     let authorizationToken = await this.getAuthorization();
     let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}});

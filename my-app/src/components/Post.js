@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import defaultUser from "../image/defaultUser.png"
+import PostImage from "./Login/PostImage";
 
 function Post({post,deletePost,updatePost}) {
     const [showMenu,setShowMenu] = useState(false);
@@ -77,7 +78,8 @@ function Post({post,deletePost,updatePost}) {
             {/*<div className="Post__title">Likes: {post?.likes}</div>
             <div className="Post__title">Created: {moment(post?.created).format("DD-MM-YYYY HH:mm:ss.SSS")}</div>
             <div className="Post__title">Last Modified: {moment(post?.modified).format("DD-MM-YYYY HH:mm:ss.SSS")}</div>*/}
-            <img className="Post__image" src={`https://picsum.photos/id/${post?.id}/1920/1080`}/>
+            {/*<img className="Post__image" src={`https://picsum.photos/id/${post?.id}/1920/1080`}/>*/}
+            <PostImage id={post?.id}/>
         </div>
     )
 }
