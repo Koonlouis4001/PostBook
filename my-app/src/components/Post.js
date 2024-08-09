@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import defaultUser from "../image/defaultUser.png"
 
 function Post({post,deletePost,updatePost}) {
     const [showMenu,setShowMenu] = useState(false);
@@ -54,7 +53,19 @@ function Post({post,deletePost,updatePost}) {
             {updateMenu && updateWindow()}
             {deleteMenu && deleteWindow()}
             <div className="Post__header">
-                <div className="Post__profile">Profile : </div>
+                <div className="Post__profile">
+                    <div className="Post__profile__image">
+                        <img src={defaultUser} alt="user"/>
+                    </div>
+                    <div>
+                        <div>
+                            {post?.profile?.profileName}
+                        </div>
+                        <div>
+                            {moment(post?.created).format("DD-MM-YYYY HH:mm:ss.SSS")}
+                        </div>
+                    </div>
+                </div>
                 <button className="Post__menu" onClick={() => setShowMenu(!showMenu)}>...</button>
                 {showMenu && 
                 <div style={{display:"flex"}}>
@@ -63,9 +74,9 @@ function Post({post,deletePost,updatePost}) {
                 </div>}
             </div>
             <div className="Post__title">{post?.title}</div>
-            <div className="Post__title">Likes: {post?.likes}</div>
+            {/*<div className="Post__title">Likes: {post?.likes}</div>
             <div className="Post__title">Created: {moment(post?.created).format("DD-MM-YYYY HH:mm:ss.SSS")}</div>
-            <div className="Post__title">Last Modified: {moment(post?.modified).format("DD-MM-YYYY HH:mm:ss.SSS")}</div>
+            <div className="Post__title">Last Modified: {moment(post?.modified).format("DD-MM-YYYY HH:mm:ss.SSS")}</div>*/}
             <img className="Post__image" src={`https://picsum.photos/id/${post?.id}/1920/1080`}/>
         </div>
     )

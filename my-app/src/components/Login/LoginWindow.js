@@ -14,7 +14,7 @@ const LoginWindow = ({setRegisterMenu,modelUser}) => {
   async function login() {
     if(user.userName !== undefined && user.password !== undefined) {
       let data = await apiConnection.authen("http://localhost:3000/authen/login",user);
-      console.log(data)
+      window.location.pathname = '/'
     }
   }
     

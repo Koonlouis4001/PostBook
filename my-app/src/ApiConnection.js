@@ -29,6 +29,10 @@ class ApiConnection {
     }
   }
 
+  async getAuthorization() {
+    return `Bearer ${localStorage.getItem('token')}`;
+  }
+
   async authen(url,data) {
     let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).catch(function (error) {
       return(error.toJSON());
@@ -41,21 +45,24 @@ class ApiConnection {
   }
 
   async getUserWithToken(url) {
-    console.log(localStorage.getItem('token'));
-    let response = await axios.get(url,{headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }});
+    let authorizationToken = await this.getAuthorization();
+    let response = await axios.get(url,{headers: { Authorization: authorizationToken}});
     console.log(response);
     return response;
   }
 
   async getData(url) {
-    let response = await axios.get(url,{headers: {'Content-Type': 'application/json'}});
-    if(response.status === '200') {
+    let authorizationToken = await this.getAuthorization();
+    let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}});
+    console.log(response);
+    if(response.status === 200) {
       return response.data;
     }
   }
 
   async postData(url,data) {
-    let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).catch(function (error) {
+    let authorizationToken = await this.getAuthorization();
+    let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
       return(error.toJSON());
     });
     console.log(response);
@@ -65,7 +72,8 @@ class ApiConnection {
   }
 
   async patchData(url,data) {
-    let response = await axios.patch(url,data,{headers: {'Content-Type': 'application/json'}});
+    let authorizationToken = await this.getAuthorization();
+    let response = await axios.patch(url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}});
     console.log(response);
     if(response.status === '200') {
       return response.data;
@@ -73,7 +81,8 @@ class ApiConnection {
   }
 
   async deleteData(url) {
-    let response = await axios.delete(url,{headers: {'Content-Type': 'application/json'}});
+    let authorizationToken = await this.getAuthorization();
+    let response = await axios.delete(url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}});
     console.log(response);
     if(response.status === '204') {
       return response.data;
