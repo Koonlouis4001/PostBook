@@ -30,7 +30,7 @@ export class PostsService {
     if(profile != null) {
       post.profile = profile;
       const createPost = await this.postRepository.save(post);
-      return instanceToPlain(createPost,{ strategy: 'excludeAll'});
+      return instanceToPlain(createPost,{ strategy: 'excludeAll',});
     }
     else {
       message += `cant find your profile (id = ${createPostDto.profile})`
@@ -39,12 +39,12 @@ export class PostsService {
   }
 
   async findAll() {
-    const response = await this.postRepository.createQueryBuilder().orderBy({'Post.id':'ASC'}).getMany();
+    const response = await this.postRepository.createQueryBuilder("post").leftJoinAndSelect("post.profile","profile").orderBy({'Post.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 
   async findOne(id: number) {
-    const response = await this.postRepository.findOneBy({id});
+    const response = await this.postRepository.createQueryBuilder("post").leftJoinAndSelect("post.profile","profile").where("post.id = :id", { id: id }).getOne();
     return instanceToPlain(response,{strategy: 'excludeAll'});
   }
 

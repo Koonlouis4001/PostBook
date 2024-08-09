@@ -37,7 +37,6 @@ export class Post {
     profile: Profile; 
 
     @Column({type: 'bytea',nullable: true})
-    @Expose()
     picture: Buffer;
 }
 
