@@ -14,17 +14,20 @@ export class PostsService {
     @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
   ) {}
 
-   async create(createPostDto: CreatePostDto) {
+  async createWithFile(profileId: number,file: Express.Multer.File,createPostDto: CreatePostDto) {
     var message = "";
+    const currentDateTime = new Date();
     const post = new Post();
     post.title = createPostDto.title;
-    post.created = createPostDto.created;
-    post.modified = createPostDto.modified;
-    post.likes = createPostDto.likes;
-
+    post.created = currentDateTime;
+    post.modified = currentDateTime;
+    post.likes = 0;
+    if(file !== undefined) {
+      post.picture = file.buffer;
+    }
     const profile = await this.profileRepository.findOne({
       where: {
-        id: createPostDto.profile
+        id: profileId
       }
     });
     if(profile != null) {
@@ -33,7 +36,7 @@ export class PostsService {
       return instanceToPlain(createPost,{ strategy: 'excludeAll',});
     }
     else {
-      message += `cant find your profile (id = ${createPostDto.profile})`
+      message += `cant find your profile (id = ${profileId})`
     }
     throw new HttpException(message, HttpStatus.BAD_REQUEST);
   }

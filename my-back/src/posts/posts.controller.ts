@@ -3,7 +3,7 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from 'src/authen/authen.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, NoFilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 
@@ -12,21 +12,16 @@ import { join } from 'path';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Post('upload/:id')
+  @Post('upload/:profileId')
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@Param('id') id: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: 'jpeg',}).addMaxSizeValidator({maxSize: 1000000})
-  .build({errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY}),) file: Express.Multer.File) {
-    return this.postsService.upload(id,file);
+  createWithFile(@Param('profileId') profileId: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: 'jpeg',}).addMaxSizeValidator({maxSize: 1000000})
+  .build({errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,fileIsRequired: false}),) file: Express.Multer.File,@Body() createPostDto: CreatePostDto) {
+    return this.postsService.createWithFile(profileId,file,createPostDto);
   }
 
   @Get('image/:id')
   getFile(@Param('id') id: number): Promise<StreamableFile> {
     return this.postsService.preview(id);
-  }
-
-  @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
   }
 
   @Get()
