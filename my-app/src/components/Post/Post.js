@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import defaultUser from "../image/defaultUser.png"
-import PostImage from "./Login/PostImage";
+import defaultUser from "../../image/defaultUser.png"
+import PostImage from "../Login/PostImage";
 
 function Post({post,deletePost,updatePost}) {
     const [showMenu,setShowMenu] = useState(false);

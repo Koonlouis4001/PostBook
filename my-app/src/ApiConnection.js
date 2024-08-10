@@ -30,12 +30,13 @@ class ApiConnection {
   }
 
   async getAuthorization() {
+    this.isAuthen();
     return `Bearer ${localStorage.getItem('token')}`;
   }
 
   async authen(url,data) {
     let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).catch(function (error) {
-      return(error.toJSON());
+      return(error);
     });
     console.log(response);
     if(response !== null || response !== undefined) {
@@ -54,7 +55,8 @@ class ApiConnection {
   async getFile(url) {
     let authorizationToken = await this.getAuthorization();
     let response = await axios.get(url,{headers: {'Content-Type': 'multipart/form-data',Authorization: authorizationToken},responseType: "blob"}).catch(error => {
-      console.error(error);
+      console.log(error);
+      return undefined;
     });
     if(response === undefined) {
       return response;
@@ -74,12 +76,31 @@ class ApiConnection {
   }
 
   async postData(url,data) {
+    console.log(url)
     let authorizationToken = await this.getAuthorization();
     let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
       return(error.toJSON());
     });
     console.log(response);
     if(response !== null || response !== undefined) {
+      return response.data;
+    }
+  }
+
+  async postDataWithFile(url,data) {
+    let authorizationToken = await this.getAuthorization();
+    var formData = new FormData();
+    for(let key in data) {
+      formData.append(key,data[key])
+    }
+    let response = await axios.post(url,formData,{headers: {'Content-Type': 'multipart/form-data',Authorization: authorizationToken}}).catch(error => {
+      console.error(error);
+    });
+    console.log(response);
+    if(response === undefined) {
+      return response;
+    }
+    if(response?.status === 200) {
       return response.data;
     }
   }

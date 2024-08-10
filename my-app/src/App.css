@@ -29,11 +29,23 @@ body {
 }
 
 .Input__header {
-  background-color: #f5f6f7;
-  border-bottom: 1px solid #dddfe2;
-  border-radius: 2px 2px;
-  margin: 0;
-  padding: 15px;
+  padding: 10px;
+}
+
+.Input__button {
+  width: 100%;
+  border-radius: 20px;
+  text-align: left;
+  align-content: center;
+  padding: 0px 10px;
+  background-color: #e9ebee;
+}
+.Input__button:hover {
+  width: 100%;
+  background-color: rgb(194, 198, 206);
+  border-radius: 20px;
+  border-color: none;
+  cursor: pointer;
 }
 
 .Input__field {
@@ -77,8 +89,10 @@ body {
 }
 
 .Post__profile__image {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  max-width: 40px;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -224,6 +238,29 @@ body {
   text-decoration: underline;
   color: blue;
   cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+  position: relative;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
 }
 
 .main-page {

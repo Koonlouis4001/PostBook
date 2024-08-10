@@ -13,7 +13,6 @@ function PostImage({id}) {
             var blobURL = URL.createObjectURL(data);
             setImage(blobURL);
         }
-        console.log(data)
     }
 
     useEffect(() => {

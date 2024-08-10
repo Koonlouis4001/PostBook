@@ -3,12 +3,13 @@ import axios from 'axios';
 import '../App.css';
 
 import Navbar from '../components/Navbar';
-import Input from '../components/Input';
-import Post from '../components/Post';
+import Input from '../components/Post/Input';
+import Post from '../components/Post/Post';
 import ApiConnection from '../ApiConnection';
 
 function PostPage() {
   const [posts,setPosts] = useState([]);
+  const [postMenu,setPostMenu] = useState(false);
 
   const apiConnection = new ApiConnection();
 
@@ -20,11 +21,9 @@ function PostPage() {
     }
   }
 
-  const addPost = async (title) => {
-    let datetime = new Date();
-    const newPost = {"title": title,"created": datetime,"modified": datetime,"likes":0,"profile":1};
-    let data = await apiConnection.postData("http://localhost:3000/posts/",newPost);
-    console.log(data);
+  const addPost = async (input) => {
+    let data = await apiConnection.postDataWithFile("http://localhost:3000/posts/upload/1",input);
+    setPostMenu(false);
     refreshPosts();
   }
 
@@ -50,7 +49,7 @@ function PostPage() {
 
   return (
     <div className="App">
-      <Input addPost={addPost}/>
+      <Input addPost={addPost} postMenu={postMenu} setPostMenu={setPostMenu}/>
       {posts?.map((post) => (<Post post={post} deletePost={deletePost} updatePost={updatePost} key={post?.id}/>))}
     </div>
   );
