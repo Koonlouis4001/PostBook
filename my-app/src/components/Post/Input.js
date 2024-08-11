@@ -17,13 +17,17 @@ function Input({addPost,post,postMenu,setPostMenu}) {
         return (
             <div className="modal-overlay">
                 <div className="modal">
-                    <div> สร้างโพสต์ </div>
-                    <button onClick={()=>setPostMenu(false)}>X</button>
-                    <div>
-                        <input className="login-input" type="text" name="title" placeholder="title" value={input.title} onChange={(e) => handleChange(e,input,setInput)}/>
-                    </div>
-                    <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                        <button className="login-button" onClick={()=>addPost(input)}>Create</button>
+                    <div className="d-flex flex-col gap-4">
+                        <div className="Post__header">
+                            <div> สร้างโพสต์ </div>
+                            <button onClick={()=>setPostMenu(false)}>X</button>
+                        </div>
+                        <div>
+                            <input className="login-input" type="text" name="title" placeholder="title" value={input.title} onChange={(e) => handleChange(e,input,setInput)}/>
+                        </div>
+                        <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+                            <button className="login-button" onClick={()=>addPost(input)}>Create</button>
+                        </div>
                     </div>
                 </div>
             </div>

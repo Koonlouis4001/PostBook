@@ -67,12 +67,16 @@ function Post({post,deletePost,updatePost}) {
                         </div>
                     </div>
                 </div>
-                <button className="Post__menu" onClick={() => setShowMenu(!showMenu)}>...</button>
-                {showMenu && 
-                <div style={{display:"flex"}}>
-                    <button onClick={() => {setUpdateMenu(true); setShowMenu(false);}}>Edit Post</button>
-                    <button onClick={() => {setDeleteMenu(true); setShowMenu(false);}}>Delete Post</button>
-                </div>}
+                <div>
+                    <button onClick={() => setShowMenu(!showMenu)}>...</button>
+                    <div className="p-relative">
+                        {showMenu && 
+                        <div className="d-flex flex-col gap-4 Post__menu">
+                            <button onClick={() => {setUpdateMenu(true); setShowMenu(false);}}>Edit Post</button>
+                            <button onClick={() => {setDeleteMenu(true); setShowMenu(false);}}>Delete Post</button>
+                        </div>}
+                    </div>
+                </div>
             </div>
             <div className="Post__title">{post?.title}</div>
             {/*<div className="Post__title">Likes: {post?.likes}</div>

@@ -22,20 +22,22 @@ const LoginWindow = ({setRegisterMenu,modelUser}) => {
     <div className="login-animation">
       <div className="login-header">LOGIN</div>
       <div className="login-window">
-        <div>
-          <input className="login-input" type="text" name="userName" placeholder="username" value={user.title} onChange={(e) => handleChange(e,user,setUser)}/>
-        </div>
-        <div>
-          <input className="login-input" type="password" name="password" placeholder="password" value={user.password} onChange={(e) => handleChange(e,user,setUser)}/>
-        </div>
-        {/*<button onClick={()=>getUserWithToken()}>UserData</button>*/}
-        <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-          <button className="login-button" onClick={()=>login()}>Login</button>
-          <div className="login-text">
-            Don't have an user?&nbsp;
-            <div className="register-text" onClick={()=>setRegisterMenu(true)}>Register</div>
+        <div className="d-flex flex-col gap-4">
+          <div>
+            <input className="login-input" type="text" name="userName" placeholder="username" value={user.title} onChange={(e) => handleChange(e,user,setUser)}/>
+          </div>
+          <div>
+            <input className="login-input" type="password" name="password" placeholder="password" value={user.password} onChange={(e) => handleChange(e,user,setUser)}/>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <button className="login-button" onClick={()=>login()}>Login</button>
+            <div className="login-text">
+              Don't have an user?&nbsp;
+              <div className="register-text" onClick={()=>setRegisterMenu(true)}>Register</div>
+            </div>
           </div>
         </div>
+        {/*<button onClick={()=>getUserWithToken()}>UserData</button>*/}
       </div>
     </div>
   )

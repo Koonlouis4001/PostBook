@@ -16,6 +16,7 @@ export class PostsController {
   @UseInterceptors(FileInterceptor('file'))
   createWithFile(@Param('profileId') profileId: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: 'jpeg',}).addMaxSizeValidator({maxSize: 1000000})
   .build({errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,fileIsRequired: false}),) file: Express.Multer.File,@Body() createPostDto: CreatePostDto) {
+    console.log(createPostDto);
     return this.postsService.createWithFile(profileId,file,createPostDto);
   }
 

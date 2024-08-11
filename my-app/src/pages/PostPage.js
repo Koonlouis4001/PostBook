@@ -48,7 +48,7 @@ function PostPage() {
   },[posts])
 
   return (
-    <div className="App">
+    <div className="Post__page">
       <Input addPost={addPost} postMenu={postMenu} setPostMenu={setPostMenu}/>
       {posts?.map((post) => (<Post post={post} deletePost={deletePost} updatePost={updatePost} key={post?.id}/>))}
     </div>
