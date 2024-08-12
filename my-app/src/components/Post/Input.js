@@ -5,13 +5,23 @@ import PropTypes from "prop-types";
 function Input({addPost,post,postMenu,setPostMenu}) {
     const [input, setInput] = useState({});
 
+    const modelInput = {};
+
     function handleChange(event,model,set) {
-        set({...model,[event.target.name] : event.target.value});
+        console.log(event.target.type)
+        if(event.target.type === "file") {
+            set({...model,[event.target.name] : event.target.files[0]});
+        }
+        else {
+            set({...model,[event.target.name] : event.target.value});
+        }
+        
     }
 
-    useEffect(()=> {
-        console.log(input);
-    },[input])
+    function handlePostMenu() {
+        setPostMenu(true);
+        setInput(modelInput)
+    }
 
     const postWindow = () => {
         return (
@@ -24,6 +34,9 @@ function Input({addPost,post,postMenu,setPostMenu}) {
                         </div>
                         <div>
                             <input className="login-input" type="text" name="title" placeholder="title" value={input.title} onChange={(e) => handleChange(e,input,setInput)}/>
+                        </div>
+                        <div>
+                            <input type="file" name="file" onChange={(e) => handleChange(e,input,setInput)}/>
                         </div>
                         <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
                             <button className="login-button" onClick={()=>addPost(input)}>Create</button>
@@ -41,7 +54,7 @@ function Input({addPost,post,postMenu,setPostMenu}) {
                 <div className="Post__profile__image">
                     <img src={defaultUser} alt="user"/>
                 </div>
-                <div className="Input__button" onClick={() => setPostMenu(true)}>
+                <div className="Input__button" onClick={() => handlePostMenu()}>
                     คุณกำลังคิดอะไรอยู่?
                 </div>
             </div>
