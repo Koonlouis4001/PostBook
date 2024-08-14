@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 
 function Input({addPost,post,postMenu,setPostMenu}) {
     const [input, setInput] = useState({});
-
     const modelInput = {};
 
     function handleChange(event,model,set) {
@@ -33,7 +32,7 @@ function Input({addPost,post,postMenu,setPostMenu}) {
                             <button onClick={()=>setPostMenu(false)}>X</button>
                         </div>
                         <div>
-                            <input className="login-input" type="text" name="title" placeholder="title" value={input.title} onChange={(e) => handleChange(e,input,setInput)}/>
+                            <input className="post-input" type="text" name="title" placeholder="คุณกำลังคิดอะไรอยู่?" value={input.title} onChange={(e) => handleChange(e,input,setInput)}/>
                         </div>
                         <div>
                             <input type="file" name="file" onChange={(e) => handleChange(e,input,setInput)}/>

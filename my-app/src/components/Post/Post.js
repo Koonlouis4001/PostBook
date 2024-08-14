@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import defaultUser from "../../image/defaultUser.png"
@@ -8,8 +8,16 @@ function Post({post,deletePost,updatePost}) {
     const [showMenu,setShowMenu] = useState(false);
     const [updateMenu,setUpdateMenu] = useState(false);
     const [deleteMenu,setDeleteMenu] = useState(false);
+    const buttonRef = useRef(null);
+    const menuRef = useRef(null);
 
     const [newPost,setNewPost] = useState(post);
+
+    const handleOutsideClick = (event) => {
+        if(menuRef.current && !menuRef.current.contains(event.target) && event.target !== buttonRef.current) {
+            setShowMenu(false);
+        }
+    }
 
     function handleChange(event) {
         setNewPost({...newPost,[event.target.name] : event.target.value});
@@ -49,6 +57,17 @@ function Post({post,deletePost,updatePost}) {
         )
     }
 
+    useEffect(()=>{
+        console.log(updateMenu)
+    },[updateMenu])
+
+    useEffect(()=>{
+        document.addEventListener('mousedown',handleOutsideClick);
+        return() => {
+            document.removeEventListener('mousedown',handleOutsideClick);
+        };
+    },[])
+
     return (
         <div className="Post">
             {updateMenu && updateWindow()}
@@ -68,7 +87,7 @@ function Post({post,deletePost,updatePost}) {
                     </div>
                 </div>
                 <div>
-                    <button onClick={() => setShowMenu(!showMenu)}>...</button>
+                    <button ref={buttonRef} onClick={() => setShowMenu(!showMenu)}>...</button>
                     <div className="p-relative">
                         {showMenu && 
                         <div className="d-flex flex-col gap-4 Post__menu">
