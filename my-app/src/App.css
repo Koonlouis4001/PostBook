@@ -285,6 +285,20 @@ body {
   outline: none;
 }
 
+.notification {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffa1a1;
+  border: solid;
+  border-color: red;
+  border-radius: 5px;
+  padding: 5px 5px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 .main-page {
   background-color: white;
   width: 100vw;

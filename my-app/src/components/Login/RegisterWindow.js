@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Notification from "../Notification/Notification";
 import ApiConnection from "../../ApiConnection";
 
 const RegisterWindow = ({setRegisterMenu,modelUser}) => {
@@ -6,6 +7,8 @@ const RegisterWindow = ({setRegisterMenu,modelUser}) => {
   const apiConnection = new ApiConnection();
 
   const [registerUser,setRegisterUser] = useState(modelUser);
+
+  const [warning,setWarning] = useState();
 
   function handleChange(event,model,set) {
       set({...model,[event.target.name] : event.target.value});
@@ -18,6 +21,9 @@ const RegisterWindow = ({setRegisterMenu,modelUser}) => {
       if(data !== undefined) {
         setRegisterMenu(false);
       }
+      else {
+        setWarning("Register Failed");
+      }
     }
   }
   
@@ -26,6 +32,9 @@ const RegisterWindow = ({setRegisterMenu,modelUser}) => {
         <div className="login-header">REGISTER</div>
         <div className="login-window">
           <div className="d-flex flex-col gap-4">
+            {
+              <Notification warning={warning} setWarning={setWarning}/>
+            }
             <div>
               <input className="login-input" type="text" name="userName" placeholder="username" value={registerUser.title} onChange={(e) => handleChange(e,registerUser,setRegisterUser)}/>
             </div>
