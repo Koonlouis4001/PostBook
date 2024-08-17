@@ -16,11 +16,11 @@ const LoginWindow = ({setRegisterMenu,modelUser}) => {
   async function login() {
     if(user.userName !== undefined && user.password !== undefined) {
       let data = await apiConnection.authen("http://localhost:3000/authen/login",user);
-      if(data) {
+      if(data?.message === undefined || data?.message === null) {
         window.location.pathname = '/'
       }
       else {
-        setWarning("Login Failed");
+        setWarning(data.message);
       }
     }
   }
@@ -51,7 +51,6 @@ const LoginWindow = ({setRegisterMenu,modelUser}) => {
             </div>
           </div>
         </div>
-        {/*<button onClick={()=>getUserWithToken()}>UserData</button>*/}
       </div>
     </div>
   )

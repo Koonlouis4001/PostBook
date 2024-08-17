@@ -14,11 +14,6 @@ const LoginPage = () => {
     password: ''
   });
 
-  /*async function getUserWithToken() {
-    let data = await apiConnection.getUserWithToken("http://localhost:3000/authen/profile");
-    console.log(data)
-  }*/
-
   return (
     <div className="login-page">
       {registerMenu && (<RegisterWindow setRegisterMenu = {setRegisterMenu} modelUser={modelUser}/>)}
