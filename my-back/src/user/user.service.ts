@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs'
 import { LoginUserDto } from './dto/login-user.dto';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -13,19 +14,27 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll() {
+    const response = await this.userRepository.createQueryBuilder("user").orderBy({'user.id':'ASC'}).getMany();
+    return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const response = await this.userRepository.createQueryBuilder("user").where("user.id = :id", { id: id }).getOne();
+    return instanceToPlain(response,{strategy: 'excludeAll'});
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.findOneBy({id})
+    user.password = updateUserDto.password;
+    user.refreshToken = updateUserDto.refreshToken;
+    user.modified = updateUserDto.modified;
+    user.profile = updateUserDto.profile;
+    const updateUser = await this.userRepository.save(user);
+    return instanceToPlain(updateUser,{ strategy: 'excludeAll'});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    return await this.userRepository.delete({id});
   }
 }

@@ -3,7 +3,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post } from './entities/post.entity';
+import { Post } from './entities/posts.entity';
 import { Profile } from 'src/profile/entities/profile.entity';
 import { instanceToPlain } from 'class-transformer';
 
@@ -42,12 +42,12 @@ export class PostsService {
   }
 
   async findAll() {
-    const response = await this.postRepository.createQueryBuilder("post").leftJoinAndSelect("post.profile","profile").orderBy({'Post.id':'ASC'}).getMany();
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("post.profile","profile").orderBy({'post.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 
   async findOne(id: number) {
-    const response = await this.postRepository.createQueryBuilder("post").leftJoinAndSelect("post.profile","profile").where("post.id = :id", { id: id }).getOne();
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("post.profile","profile").where("post.id = :id", { id: id }).getOne();
     return instanceToPlain(response,{strategy: 'excludeAll'});
   }
 

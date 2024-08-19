@@ -19,6 +19,9 @@ export class User {
     @Column({ type: 'timestamp with time zone', name: 'last_modified' })
     modified: Date;
 
+    @Column({ type: 'varchar', length: 300, name: 'refresh_token', nullable: true })
+    refreshToken: string;
+
     @OneToOne(()=>Profile)
     @JoinColumn({name:'profile_fk'})
     profile: Profile;

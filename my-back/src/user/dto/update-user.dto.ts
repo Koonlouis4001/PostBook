@@ -9,6 +9,10 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsOptional()
     readonly password: string;
 
+    @IsString()
+    @IsOptional()
+    readonly refreshToken: string;
+
     @IsDateString()
     @IsOptional()
     readonly modified: Date;
