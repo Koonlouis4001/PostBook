@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Post } from "src/posts/entities/post.entity";
+import { Post } from "src/posts/entities/posts.entity";
 import { User } from "src/user/entities/user.entity";
 import { Expose } from "class-transformer";
 

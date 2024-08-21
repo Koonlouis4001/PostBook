@@ -3,20 +3,19 @@ import { CreateUserDto } from './create-user.dto';
 import { IsDateString, IsOptional, IsString } from 'class-validator';
 import { Profile } from 'src/profile/entities/profile.entity';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto {
+    @IsString()
+    @IsOptional()
+    password: string;
 
     @IsString()
     @IsOptional()
-    readonly password: string;
-
-    @IsString()
-    @IsOptional()
-    readonly refreshToken: string;
+    refreshToken: string;
 
     @IsDateString()
     @IsOptional()
-    readonly modified: Date;
+    modified: Date;
 
     @IsOptional()
-    readonly profile: Profile
+    profile: Profile
 }

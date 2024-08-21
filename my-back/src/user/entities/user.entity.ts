@@ -1,3 +1,4 @@
+import { Expose } from "class-transformer";
 import { Profile } from "src/profile/entities/profile.entity";
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
@@ -5,9 +6,11 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn
 @Unique(['userName'])
 export class User {
     @PrimaryGeneratedColumn()
+    @Expose()
     id: number;
 
     @Column({ type: 'varchar', length: 100, name: 'user_name' })
+    @Expose()
     userName: string;
 
     @Column({ type: 'varchar', length: 300, name: 'password' })

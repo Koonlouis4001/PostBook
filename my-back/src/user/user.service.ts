@@ -14,9 +14,32 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  async create(createUserDto: CreateUserDto) {
+    const user = new User();
+    const currentDateTime = new Date();
+    user.userName = createUserDto.userName;
+    user.password = createUserDto.password;
+    user.created = currentDateTime;
+    user.modified = currentDateTime;
+    user.refreshToken = null;
+    user.profile = null;
+    return await this.userRepository.save(user);
+  }
+
   async findAll() {
     const response = await this.userRepository.createQueryBuilder("user").orderBy({'user.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
+  }
+
+  async findRefreshToken(id: number) {
+    const user = await this.userRepository.findOneBy({id});
+    return user.refreshToken;
+  }
+
+  async findByUsername(userName: string) {
+    return await this.userRepository.findOne({
+      where: { userName },
+    });
   }
 
   async findOne(id: number) {

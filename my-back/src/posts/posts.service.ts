@@ -42,12 +42,12 @@ export class PostsService {
   }
 
   async findAll() {
-    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("post.profile","profile").orderBy({'post.id':'ASC'}).getMany();
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").orderBy({'posts.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 
   async findOne(id: number) {
-    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("post.profile","profile").where("post.id = :id", { id: id }).getOne();
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").where("posts.id = :id", { id: id }).getOne();
     return instanceToPlain(response,{strategy: 'excludeAll'});
   }
 
