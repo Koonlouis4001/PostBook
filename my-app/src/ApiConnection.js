@@ -17,10 +17,10 @@ const isTokenExpired = (token) => {
 class ApiConnection {
   
   isAuthen() {
-    if (localStorage.getItem('token')) {
-      const token = localStorage.getItem('token');
+    if (localStorage.getItem('accessToken')) {
+      const token = localStorage.getItem('accessToken');
       if (isTokenExpired(token)) {
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
         window.location.pathname = '/login'
       }
     } 
@@ -31,7 +31,8 @@ class ApiConnection {
 
   async getAuthorization() {
     this.isAuthen();
-    return `Bearer ${localStorage.getItem('token')}`;
+    console.log(localStorage.getItem('accessToken'));
+    return `Bearer ${localStorage.getItem('accessToken')}`;
   }
 
   async authen(url,data) {
@@ -39,9 +40,9 @@ class ApiConnection {
       return(error.response);
     });
     console.log(response);
-    console.log(!(response?.message === undefined || response?.message === null))
-    if(response?.message === undefined || response?.message === null) {
-      localStorage.setItem('token', response.data);
+    if(response?.data) {
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
     }
     return response?.data;
   }

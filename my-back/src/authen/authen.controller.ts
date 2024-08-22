@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, Res, Req, Headers } from '@nestjs/common';
 import { AuthenService } from './authen.service';
 import { SignUpAuthenDto } from './dto/sign-up-authen.dto';
-import { LoginAuthenDto } from './dto/login-authen.dto';
+import { SignInAuthenDto } from './dto/sign-in-authen.dto';
 import { AuthGuard } from './authen.guard';
+import { AuthRefreshGuard } from './authen.refresh.guard';
 
 @Controller('authen')
 export class AuthenController {
@@ -14,8 +15,23 @@ export class AuthenController {
   }
 
   @Post('/login')
-  login(@Body() loginAuthenDto: LoginAuthenDto) {
-    return this.authenService.login(loginAuthenDto);
+  async login(@Body() signInAuthenDto: SignInAuthenDto) {
+    return this.authenService.signIn(signInAuthenDto);
+  }
+
+  @UseGuards(AuthRefreshGuard)
+  @Get('/refresh/:id')
+  async refresh(@Param('id') id: number,@Headers() headers: any) {
+    const [type, token] = headers.authorization?.split(' ') ?? [];
+    console.log(type);
+    console.log(token);
+    return this.authenService.refresh(id,token);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/logout/:id')
+  async logout(@Param('id') id: number) {
+    this.authenService.logout(id);
   }
 
   @UseGuards(AuthGuard)
