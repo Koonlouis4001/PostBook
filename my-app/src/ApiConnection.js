@@ -29,6 +29,19 @@ class ApiConnection {
     }
   }
 
+  async getNewAccessToken(url) {
+    let refreshToken = `Bearer ${localStorage.getItem('refreshToken')}`;
+    let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: refreshToken}}).catch(async function (error) {
+      let errorResponse = await (error.response.data.text());
+      return(JSON.parse(errorResponse));
+    });
+    if(response?.data) {
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+    return response?.data;
+  }
+
   async getAuthorization() {
     this.isAuthen();
     console.log(localStorage.getItem('accessToken'));
@@ -39,7 +52,6 @@ class ApiConnection {
     let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).catch(function (error) {
       return(error.response);
     });
-    console.log(response);
     if(response?.data) {
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
