@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import '../App.css';
 
@@ -10,6 +10,7 @@ import ApiConnection from '../ApiConnection';
 function PostPage() {
   const [posts,setPosts] = useState([]);
   const [postMenu,setPostMenu] = useState(false);
+  const initialized = useRef(false);
 
   const apiConnection = new ApiConnection();
 
@@ -42,7 +43,8 @@ function PostPage() {
   }
 
   useEffect(()=> {
-    if(posts.length === 0) {
+    if(posts.length === 0 && !initialized.current) {
+      initialized.current = true;
       refreshPosts();
     }
   },[])

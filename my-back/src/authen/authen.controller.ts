@@ -23,8 +23,6 @@ export class AuthenController {
   @Get('/refresh/:id')
   async refresh(@Param('id') id: number,@Headers() headers: any) {
     const [type, token] = headers.authorization?.split(' ') ?? [];
-    console.log(type);
-    console.log(token);
     return this.authenService.refresh(id,token);
   }
 

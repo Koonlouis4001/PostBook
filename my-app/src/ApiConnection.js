@@ -16,24 +16,39 @@ const isTokenExpired = (token) => {
 
 class ApiConnection {
   
-  isAuthen() {
-    if (localStorage.getItem('accessToken')) {
+  async isAuthen() {
+    if (localStorage.getItem('accessToken') && localStorage.getItem('refreshToken')) {
       const token = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
       if (isTokenExpired(token)) {
-        localStorage.removeItem('accessToken');
-        window.location.pathname = '/login'
+        if(isTokenExpired(refreshToken)) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          if(window.location.pathname !== '/login'){
+            window.location.pathname = '/login'
+          }
+        }
+        else {
+          console.log("start refresh")
+          await this.getNewAccessToken('http://localhost:3000/authen/refresh/1');
+        }
       }
     } 
     else {
-      window.location.pathname = '/login'
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      if(window.location.pathname !== '/login'){
+        window.location.pathname = '/login'
+      }
     }
   }
 
   async getNewAccessToken(url) {
     let refreshToken = `Bearer ${localStorage.getItem('refreshToken')}`;
     let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: refreshToken}}).catch(async function (error) {
-      let errorResponse = await (error.response.data.text());
-      return(JSON.parse(errorResponse));
+      if(window.location.pathname !== '/login'){
+        window.location.pathname = '/login'
+      }
     });
     if(response?.data) {
       localStorage.setItem('accessToken', response.data.accessToken);
@@ -43,7 +58,7 @@ class ApiConnection {
   }
 
   async getAuthorization() {
-    this.isAuthen();
+    await this.isAuthen();
     console.log(localStorage.getItem('accessToken'));
     return `Bearer ${localStorage.getItem('accessToken')}`;
   }
