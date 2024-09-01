@@ -59,7 +59,6 @@ class ApiConnection {
 
   async getAuthorization() {
     await this.isAuthen();
-    console.log(localStorage.getItem('accessToken'));
     return `Bearer ${localStorage.getItem('accessToken')}`;
   }
 
@@ -72,6 +71,15 @@ class ApiConnection {
       localStorage.setItem('refreshToken', response.data.refreshToken);
     }
     return response?.data;
+  }
+
+  async logout(url) {
+    let authorizationToken = await this.getAuthorization();
+    let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
+      return(error.response);
+    });
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
   }
 
   /*async getUserWithToken(url) {

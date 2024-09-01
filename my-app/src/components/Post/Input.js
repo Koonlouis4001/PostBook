@@ -7,7 +7,6 @@ function Input({addPost,post,postMenu,setPostMenu}) {
     const modelInput = {};
 
     function handleChange(event,model,set) {
-        console.log(event.target.type)
         if(event.target.type === "file") {
             set({...model,[event.target.name] : event.target.files[0]});
         }

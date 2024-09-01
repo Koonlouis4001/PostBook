@@ -85,10 +85,11 @@ body {
   margin-top: 15px;
 }
 
-.Page__Link {
+.Page__Link * {
   padding: 0px 20px;
   color: white;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .Post__menu {
