@@ -3,19 +3,31 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import defaultUser from "../../image/defaultUser.png"
 import PostImage from "./PostImage";
+import ApiConnection from "../../ApiConnection";
 
 function Post({post,deletePost,updatePost}) {
     const [showMenu,setShowMenu] = useState(false);
     const [updateMenu,setUpdateMenu] = useState(false);
     const [deleteMenu,setDeleteMenu] = useState(false);
+    const [image,setImage] = useState(undefined);
     const buttonRef = useRef(null);
     const menuRef = useRef(null);
+
+    const apiConnection = new ApiConnection();
 
     const [newPost,setNewPost] = useState(post);
 
     const handleOutsideClick = (event) => {
         if(menuRef.current && !menuRef.current.contains(event.target) && event.target !== buttonRef.current) {
             setShowMenu(false);
+        }
+    }
+
+    const showImage = async () => {
+        let data = await apiConnection.getFile(`http://localhost:3000/profile/image/${post?.profile?.id}`);
+        if(data !== undefined) {
+            var blobURL = URL.createObjectURL(data);
+            setImage(blobURL);
         }
     }
 
@@ -62,6 +74,7 @@ function Post({post,deletePost,updatePost}) {
     },[updateMenu])
 
     useEffect(()=>{
+        showImage();
         document.addEventListener('mousedown',handleOutsideClick);
         return() => {
             document.removeEventListener('mousedown',handleOutsideClick);
@@ -75,7 +88,7 @@ function Post({post,deletePost,updatePost}) {
             <div className="Post__header">
                 <div className="Post__profile">
                     <div className="Post__profile__image">
-                        <img src={defaultUser} alt="user"/>
+                        <img src={image === undefined ? defaultUser : `${image}`} alt="user"/>
                     </div>
                     <div>
                         <div>
