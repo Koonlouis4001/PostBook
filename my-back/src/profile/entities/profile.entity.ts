@@ -36,4 +36,7 @@ export class Profile {
     @OneToOne(()=>User)
     @JoinColumn({name:'user_fk'})
     user: User;
+
+    @Column({name:'picture',type: 'bytea',nullable: true})
+    picture: Buffer;
 }
