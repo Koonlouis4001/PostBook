@@ -29,7 +29,7 @@ export class AuthenService {
     }
     const hashPassword = await this.hashData(password);
     const newUser = await this.userService.create({...createUserDto,password: hashPassword});
-    const tokens = await this.getTokens(newUser.id, newUser.userName);
+    const tokens = await this.getTokens(newUser.id, newUser.userName,newUser.profile?.id,newUser.profile?.profileName);
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
     return tokens;
   }
@@ -44,7 +44,7 @@ export class AuthenService {
     if(!isPasswordMatched) {
       throw new UnauthorizedException('Invalid username or password');
     }
-    const tokens = await this.getTokens(user.id, user.userName);
+    const tokens = await this.getTokens(user.id, user.userName,user.profile?.id,user.profile?.profileName);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
@@ -63,13 +63,14 @@ export class AuthenService {
   async refresh(id: number,refreshToken: string) {
     const user = await this.userService.findOne(id);
     const userRefreshToken = await this.userService.findRefreshToken(id);
-    console.log("User Refresh Token: "+userRefreshToken);
-    console.log("Refresh Token: "+refreshToken);
+    const payload = await this.jwtService.verifyAsync(refreshToken, {
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+    });
     if(!user || !userRefreshToken || userRefreshToken !== refreshToken) {
       await this.logout(id);
       throw new UnauthorizedException('Invalid Refresh Token');
     }
-    const tokens = await this.getTokens(user.id, user.userName);
+    const tokens = await this.getTokens(user.id, user.userName,user.profile?.id,user.profile?.profileName);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
@@ -80,12 +81,14 @@ export class AuthenService {
     await this.userService.update(id, updateUser);
   }
 
-  async getTokens(userId: number, username: string) {
+  async getTokens(userId: number, username: string,profileId: number,profileName: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           id: userId,
           userName: username,
+          profileId: profileId,
+          profileName: profileName,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),

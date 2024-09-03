@@ -7,7 +7,7 @@ function Navbar() {
     const apiConnection = new ApiConnection();
 
     const logout = async () => {
-        await apiConnection.logout("http://localhost:3000/authen/logout/1");
+        await apiConnection.logout(`http://localhost:3000/authen/logout/${localStorage.getItem('userId')}`);
         window.location.pathname = '/login';
     }
     return (

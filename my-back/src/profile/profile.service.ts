@@ -40,7 +40,6 @@ export class ProfileService {
     if(file !== undefined) {
       profile.picture = file.buffer;
     }
-    console.log(profile);
     const updateProfile = await this.profileRepository.save(profile);
     return instanceToPlain(updateProfile,{ strategy: 'excludeAll'});
   }

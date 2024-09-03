@@ -24,10 +24,6 @@ const LoginWindow = ({setRegisterMenu,modelUser}) => {
       }
     }
   }
-
-  useEffect(() => {
-    console.log(warning);
-  },[warning])
     
   return (
     <div className="login-animation">

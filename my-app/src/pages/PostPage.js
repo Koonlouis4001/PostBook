@@ -16,29 +16,30 @@ function PostPage() {
 
   const refreshPosts = async () => {
     let data = await apiConnection.getData("http://localhost:3000/posts/");
-    console.log(data);
     if(data?.message === undefined || data?.message === null) {
       setPosts(data);
     }
   }
 
   const addPost = async (input) => {
-    let data = await apiConnection.postDataWithFile("http://localhost:3000/posts/upload/1",input);
-    setPostMenu(false);
-    refreshPosts();
+    if(localStorage.getItem('profileId')) {
+      let data = await apiConnection.postDataWithFile(`http://localhost:3000/posts/upload/${localStorage.getItem('profileId')}`,input);
+      setPostMenu(false);
+      refreshPosts();
+    }
+    else {
+      console.log("profile id is null or undefined");
+    }
   }
 
   const updatePost = async (post) => {
     let updatedPost = {...post,modified: new Date()}
-    console.log(updatePost);
     let data = await apiConnection.patchData(`http://localhost:3000/posts/${post.id}`,updatedPost);
-    console.log(data);
     refreshPosts();
   }
 
   const deletePost = async (id) => {
     let data = await apiConnection.deleteData(`http://localhost:3000/posts/${id}`);
-    console.log(data);
     refreshPosts();
   }
 

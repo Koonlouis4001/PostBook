@@ -70,10 +70,6 @@ function Post({post,deletePost,updatePost}) {
     }
 
     useEffect(()=>{
-        console.log(updateMenu)
-    },[updateMenu])
-
-    useEffect(()=>{
         showImage();
         document.addEventListener('mousedown',handleOutsideClick);
         return() => {

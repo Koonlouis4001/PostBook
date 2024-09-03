@@ -7,6 +7,7 @@ const isTokenExpired = (token) => {
   try {
     const decodedToken = jwtDecode(token);
     const currentTime = Date.now() / 1000;
+    console.log(decodedToken);
     return decodedToken.exp < currentTime;
   } catch (error) {
     console.error('Error decoding token:', error);
@@ -22,21 +23,19 @@ class ApiConnection {
       const refreshToken = localStorage.getItem('refreshToken');
       if (isTokenExpired(token)) {
         if(isTokenExpired(refreshToken)) {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
+          localStorage.clear();
           if(window.location.pathname !== '/login'){
             window.location.pathname = '/login'
           }
         }
         else {
           console.log("start refresh")
-          await this.getNewAccessToken('http://localhost:3000/authen/refresh/1');
+          await this.getNewAccessToken(`http://localhost:3000/authen/refresh/${localStorage.getItem('userId')}`);
         }
       }
     } 
     else {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      localStorage.clear();
       if(window.location.pathname !== '/login'){
         window.location.pathname = '/login'
       }
@@ -51,8 +50,7 @@ class ApiConnection {
       }
     });
     if(response?.data) {
-      localStorage.setItem('accessToken', response.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
+      localStorage.clear();
     }
     return response?.data;
   }
@@ -66,9 +64,16 @@ class ApiConnection {
     let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).catch(function (error) {
       return(error.response);
     });
-    if(response?.data) {
+    console.log(response);
+    if(response?.data && response?.status !== 401) {
+      console.log("sssss")
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
+      const decodeToken = jwtDecode(response.data.accessToken);
+      localStorage.setItem('userId',decodeToken.id);
+      localStorage.setItem('userName',decodeToken.userName);
+      localStorage.setItem('profileId',decodeToken.profileId);
+      localStorage.setItem('profileName',decodeToken.profileName);
     }
     return response?.data;
   }
@@ -78,8 +83,7 @@ class ApiConnection {
     let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
       return(error.response);
     });
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.clear();
   }
 
   /*async getUserWithToken(url) {
@@ -94,7 +98,6 @@ class ApiConnection {
       let errorResponse = await (error.response.data.text());
       return(JSON.parse(errorResponse));
     });
-    console.log(response);
     return response?.data;
   }
 
@@ -107,7 +110,6 @@ class ApiConnection {
   }
 
   async postData(url,data) {
-    console.log(url)
     let authorizationToken = await this.getAuthorization();
     let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
       return(error.response);

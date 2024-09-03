@@ -37,13 +37,16 @@ export class UserService {
   }
 
   async findByUsername(userName: string) {
-    return await this.userRepository.findOne({
-      where: { userName },
-    });
+    return await this.userRepository.createQueryBuilder("user").leftJoinAndSelect("user.profile","profile").where("user.userName = :userName", { userName: userName }).getOne();
+  }
+
+  async findWithRefreshToken(refreshToken: string) {
+    const user = await this.userRepository.createQueryBuilder("user").leftJoinAndSelect("user.profile","profile").where("user.refreshToken = :refreshToken", { refreshToken: refreshToken }).getOne();
+    return user
   }
 
   async findOne(id: number) {
-    const response = await this.userRepository.createQueryBuilder("user").where("user.id = :id", { id: id }).getOne();
+    const response = await this.userRepository.createQueryBuilder("user").leftJoinAndSelect("user.profile","profile").where("user.id = :id", { id: id }).getOne();
     return instanceToPlain(response,{strategy: 'excludeAll'});
   }
 

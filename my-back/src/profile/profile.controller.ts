@@ -30,11 +30,11 @@ export class ProfileController {
     return this.profileService.findOne(id);
   }
 
-  @Patch('upload/:profileId')
+  @Patch('upload/:id')
   @UseInterceptors(FileInterceptor('file'))
-  updateWithFile(@Param('profileId') profileId: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: 'jpeg',}).addMaxSizeValidator({maxSize: 1000000})
+  updateWithFile(@Param('id') id: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: 'jpeg',}).addMaxSizeValidator({maxSize: 1000000})
   .build({errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,fileIsRequired: true}),) file: Express.Multer.File) {
-    return this.profileService.updateWithFile(profileId,file);
+    return this.profileService.updateWithFile(id,file);
   }
 
   @Patch(':id')
