@@ -100,7 +100,6 @@ body {
 }
 
 .Post__header {
-  padding: 0px 5px;
   width: 100%;
   display: flex;
   justify-content: space-between;

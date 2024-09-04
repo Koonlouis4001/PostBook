@@ -9,7 +9,6 @@ import ApiConnection from '../ApiConnection';
 
 function PostPage() {
   const [posts,setPosts] = useState([]);
-  const [postMenu,setPostMenu] = useState(false);
   const initialized = useRef(false);
 
   const apiConnection = new ApiConnection();
@@ -21,28 +20,6 @@ function PostPage() {
     }
   }
 
-  const addPost = async (input) => {
-    if(localStorage.getItem('profileId')) {
-      let data = await apiConnection.postDataWithFile(`http://localhost:3000/posts/upload/${localStorage.getItem('profileId')}`,input);
-      setPostMenu(false);
-      refreshPosts();
-    }
-    else {
-      console.log("profile id is null or undefined");
-    }
-  }
-
-  const updatePost = async (post) => {
-    let updatedPost = {...post,modified: new Date()}
-    let data = await apiConnection.patchData(`http://localhost:3000/posts/${post.id}`,updatedPost);
-    refreshPosts();
-  }
-
-  const deletePost = async (id) => {
-    let data = await apiConnection.deleteData(`http://localhost:3000/posts/${id}`);
-    refreshPosts();
-  }
-
   useEffect(()=> {
     if(posts.length === 0 && !initialized.current) {
       initialized.current = true;
@@ -52,8 +29,8 @@ function PostPage() {
 
   return (
     <div className="Post__page">
-      <Input addPost={addPost} postMenu={postMenu} setPostMenu={setPostMenu}/>
-      {posts?.map((post) => (<Post post={post} deletePost={deletePost} updatePost={updatePost} key={post?.id}/>))}
+      <Input refreshPosts={refreshPosts}/>
+      {posts?.map((post) => (<Post post={post} refreshPosts={refreshPosts} key={post?.id}/>))}
     </div>
   );
 }

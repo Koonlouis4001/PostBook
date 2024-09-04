@@ -135,17 +135,17 @@ class ApiConnection {
       formData.append(key,data[key])
     }
     let response = await axios.post(url,formData,{headers: {'Content-Type': 'multipart/form-data',Authorization: authorizationToken}}).catch(function (error) {
-      return(error.response);
+      return(error.response?.data);
     });
-    return response?.data;
+    return response;
   }
 
   async patchData(url,data) {
     let authorizationToken = await this.getAuthorization();
     let response = await axios.patch(url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
-      return(error.response);
+      return(error.response?.data);
     });
-    return response?.data;
+    return response;
   }
 
   async deleteData(url) {

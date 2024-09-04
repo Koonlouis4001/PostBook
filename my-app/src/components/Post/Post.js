@@ -4,24 +4,19 @@ import moment from "moment";
 import defaultUser from "../../image/defaultUser.png"
 import PostImage from "./PostImage";
 import ApiConnection from "../../ApiConnection";
+import Notification from "../Notification/Notification";
+import DeleteButton from "./Button/DeleteButton";
+import UpdateButton from "./Button/UpdateButton";
 
-function Post({post,deletePost,updatePost}) {
+function Post({post,refreshPosts}) {
     const [showMenu,setShowMenu] = useState(false);
     const [updateMenu,setUpdateMenu] = useState(false);
     const [deleteMenu,setDeleteMenu] = useState(false);
-    const [image,setImage] = useState(undefined);
+    const [image,setImage] = useState();
     const buttonRef = useRef(null);
     const menuRef = useRef(null);
 
     const apiConnection = new ApiConnection();
-
-    const [newPost,setNewPost] = useState(post);
-
-    const handleOutsideClick = (event) => {
-        if(menuRef.current && !menuRef.current.contains(event.target) && event.target !== buttonRef.current) {
-            setShowMenu(false);
-        }
-    }
 
     const showImage = async () => {
         let data = await apiConnection.getFile(`http://localhost:3000/profile/image/${post?.profile?.id}`);
@@ -31,42 +26,10 @@ function Post({post,deletePost,updatePost}) {
         }
     }
 
-    function handleChange(event) {
-        setNewPost({...newPost,[event.target.name] : event.target.value});
-    }
-
-    function updateWindow() {
-        return (
-            <div className="Popup">
-                <div className="Box">
-                    <div className="Popup_Input">
-                        <div className="Popup_Title">Title</div>
-                        <input className="Popup_Box" type="text" name="title" value={newPost.title} onChange={(e) => handleChange(e)}/>
-                    </div>
-                    <div  className="Popup_Button">
-                        <button className="btn-delete" onClick={()=>updatePost(newPost)}>Update</button>
-                        <button className="btn-close" onClick={()=>setUpdateMenu(false)}>Close</button>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-    function deleteWindow() {
-        return (
-            <div className="Popup">
-                <div className="Box">
-                    <div className="Popup_Header">
-                        <div>Are you sure you want to delete this post?</div>
-                        <div>Title : {post.title}</div>
-                    </div>
-                    <div  className="Popup_Button">
-                        <button className="btn-delete" onClick={()=>deletePost(post.id)}>Delete</button>
-                        <button className="btn-close" onClick={()=>setDeleteMenu(false)}>Close</button>
-                    </div>
-                </div>
-            </div>
-        )
+    const handleOutsideClick = (event) => {
+        if(menuRef.current && !menuRef.current.contains(event.target) && event.target !== buttonRef.current) {
+            setShowMenu(false);
+        }
     }
 
     useEffect(()=>{
@@ -79,8 +42,8 @@ function Post({post,deletePost,updatePost}) {
 
     return (
         <div className="Post">
-            {updateMenu && updateWindow()}
-            {deleteMenu && deleteWindow()}
+            {updateMenu && <UpdateButton post={post} setUpdateMenu={setUpdateMenu} refreshPosts={refreshPosts}/>}
+            {deleteMenu && <DeleteButton post={post} setDeleteMenu={setDeleteMenu} refreshPosts={refreshPosts}/>}
             <div className="Post__header">
                 <div className="Post__profile">
                     <div className="Post__profile__image">
@@ -117,9 +80,8 @@ function Post({post,deletePost,updatePost}) {
 }
 
 Post.propTypes = {
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    deletePost: PropTypes.func.isRequired
+    post: PropTypes.object.isRequired,
+    refreshPosts: PropTypes.func.isRequired,
 }
 
 export default Post;

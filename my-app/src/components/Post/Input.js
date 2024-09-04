@@ -1,10 +1,33 @@
 import React, { useEffect, useState } from "react";
 import defaultUser from "../../image/defaultUser.png"
 import PropTypes from "prop-types";
+import ApiConnection from "../../ApiConnection";
+import Notification from "../Notification/Notification";
 
-function Input({addPost,post,postMenu,setPostMenu}) {
-    const [input, setInput] = useState({});
-    const modelInput = {};
+function Input({refreshPosts}) {
+    const modelInput = {
+        title: "",
+    };
+    const [input, setInput] = useState(modelInput);
+    const [postMenu,setPostMenu] = useState(false);
+    const [warning,setWarning] = useState();
+    const profileImage = localStorage.getItem('profileImage') ? localStorage.getItem('profileImage') : defaultUser;
+
+    const apiConnection = new ApiConnection;
+
+    const addPost = async (input) => {
+        if(localStorage.getItem('profileId')) {
+            let data = await apiConnection.postDataWithFile(`http://localhost:3000/posts/upload/${localStorage.getItem('profileId')}`,input);
+            console.log(data);
+            if(data?.statusCode === 200 && data?.statusCode === 201) {
+                setPostMenu(false);
+                refreshPosts();
+            }
+            else {
+                setWarning(data.message);
+            }
+        }
+    }
 
     function handleChange(event,model,set) {
         if(event.target.type === "file") {
@@ -13,7 +36,6 @@ function Input({addPost,post,postMenu,setPostMenu}) {
         else {
             set({...model,[event.target.name] : event.target.value});
         }
-        
     }
 
     function handlePostMenu() {
@@ -25,11 +47,13 @@ function Input({addPost,post,postMenu,setPostMenu}) {
         return (
             <div className="modal-overlay">
                 <div className="modal">
+                    
                     <div className="d-flex flex-col gap-4">
                         <div className="Post__header">
                             <div> สร้างโพสต์ </div>
                             <button onClick={()=>setPostMenu(false)}>X</button>
                         </div>
+                        {<Notification warning={warning} setWarning={setWarning}/>}
                         <div>
                             <input className="post-input" type="text" name="title" placeholder="คุณกำลังคิดอะไรอยู่?" value={input.title} onChange={(e) => handleChange(e,input,setInput)}/>
                         </div>
@@ -50,7 +74,7 @@ function Input({addPost,post,postMenu,setPostMenu}) {
             {postMenu && postWindow()}
             <div className="d-flex Input__header">
                 <div className="Post__profile__image">
-                    <img src={defaultUser} alt="user"/>
+                    <img src={profileImage} alt="user"/>
                 </div>
                 <div className="Input__button" onClick={() => handlePostMenu()}>
                     คุณกำลังคิดอะไรอยู่?
@@ -70,7 +94,7 @@ function Input({addPost,post,postMenu,setPostMenu}) {
 }
 
 Input.propTypes = {
-    addPost: PropTypes.func.isRequired
+    refreshPosts: PropTypes.func.isRequired,
 }
 
 export default Input;
