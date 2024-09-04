@@ -49,10 +49,11 @@ export class AuthenService {
     return tokens;
   }
 
-  async logout(id: number) {
+  async logout(refreshToken: string) {
+    const decodeToken = this.jwtService.decode(refreshToken);
     const updateUserDto = new UpdateUserDto;
     updateUserDto.refreshToken = null;
-    return this.userService.update(id, updateUserDto);
+    return this.userService.update(decodeToken.id, updateUserDto);
   }
 
   async hashData(data: string) {
@@ -60,14 +61,15 @@ export class AuthenService {
     return await bcrypt.hash(data,salt);
   }
 
-  async refresh(id: number,refreshToken: string) {
-    const user = await this.userService.findOne(id);
-    const userRefreshToken = await this.userService.findRefreshToken(id);
+  async refresh(refreshToken: string) {
+    const decodeToken = this.jwtService.decode(refreshToken);
+    const user = await this.userService.findOne(decodeToken.id);
+    const userRefreshToken = await this.userService.findRefreshToken(decodeToken.id);
     const payload = await this.jwtService.verifyAsync(refreshToken, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
     });
     if(!user || !userRefreshToken || userRefreshToken !== refreshToken) {
-      await this.logout(id);
+      await this.logout(refreshToken);
       throw new UnauthorizedException('Invalid Refresh Token');
     }
     const tokens = await this.getTokens(user.id, user.userName,user.profile?.id,user.profile?.profileName);
@@ -97,8 +99,7 @@ export class AuthenService {
       ),
       this.jwtService.signAsync(
         {
-          id: userId,
-          userName: username,
+          id: userId
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),

@@ -47,7 +47,7 @@ export class UserService {
 
   async findOne(id: number) {
     const response = await this.userRepository.createQueryBuilder("user").leftJoinAndSelect("user.profile","profile").where("user.id = :id", { id: id }).getOne();
-    return instanceToPlain(response,{strategy: 'excludeAll'});
+    return response;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

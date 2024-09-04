@@ -63,8 +63,7 @@ export class ProfileService {
       throw new HttpException(message, HttpStatus.BAD_REQUEST);
     }
     if(profile.picture === null) {
-      message += `cant find your profile picture (id = ${id})`
-      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+      return null;
     }
     return new StreamableFile(profile.picture);
   }

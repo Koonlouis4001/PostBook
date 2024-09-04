@@ -75,8 +75,7 @@ export class PostsService {
       throw new HttpException(message, HttpStatus.BAD_REQUEST);
     }
     if(post.picture === null) {
-      message += `cant find your post picture (id = ${id})`
-      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+      return null;
     }
     return new StreamableFile(post.picture);
   }

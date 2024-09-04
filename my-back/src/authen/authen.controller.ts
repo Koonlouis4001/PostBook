@@ -20,16 +20,17 @@ export class AuthenController {
   }
 
   @UseGuards(AuthRefreshGuard)
-  @Get('/refresh/:id')
-  async refresh(@Param('id') id: number,@Headers() headers: any) {
+  @Get('/refresh')
+  async refresh(@Headers() headers: any) {
     const [type, token] = headers.authorization?.split(' ') ?? [];
-    return this.authenService.refresh(id,token);
+    return this.authenService.refresh(token);
   }
 
   @UseGuards(AuthGuard)
-  @Get('/logout/:id')
-  async logout(@Param('id') id: number) {
-    this.authenService.logout(id);
+  @Get('/logout')
+  async logout(@Headers() headers: any) {
+    const [type, token] = headers.authorization?.split(' ') ?? [];
+    this.authenService.logout(token);
   }
 
   @UseGuards(AuthGuard)
