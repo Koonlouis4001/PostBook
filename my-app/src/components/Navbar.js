@@ -1,16 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ApiConnection from "../ApiConnection";
 
 function Navbar() {
 
     const apiConnection = new ApiConnection();
+    const navigate = new useNavigate();
+    const location = new useLocation();
 
     const logout = async () => {
-        await apiConnection.logout(`http://localhost:3000/authen/logout/${localStorage.getItem('userId')}`);
-        window.location.pathname = '/login';
+        await apiConnection.logout(`http://localhost:3000/authen/logout`);
+        navigate('/login');
     }
-    return (
+    return (location.pathname !== '/login' &&
         <div className="navbar-container">
             <div className="navbar">
                 <div>Facebook</div>
@@ -21,7 +23,6 @@ function Navbar() {
                 </div>
             </div>
         </div>
-        
     );
 }
 

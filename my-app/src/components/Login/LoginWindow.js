@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ApiConnection from "../../ApiConnection";
 import Notification from "../Notification/Notification";
+import { useNavigate } from "react-router-dom";
 
 const LoginWindow = ({setRegisterMenu,modelUser}) => {
   const apiConnection = new ApiConnection();
+  const navigate = new useNavigate();
 
   const [user,setUser] = useState(modelUser);
   const [warning,setWarning] = useState();
@@ -17,7 +19,7 @@ const LoginWindow = ({setRegisterMenu,modelUser}) => {
     if(user.userName !== undefined && user.password !== undefined) {
       let data = await apiConnection.authen("http://localhost:3000/authen/login",user);
       if(data?.message === undefined || data?.message === null) {
-        window.location.pathname = '/'
+        navigate('/');
       }
       else {
         setWarning(data.message);

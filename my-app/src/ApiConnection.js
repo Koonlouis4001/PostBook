@@ -1,36 +1,35 @@
 import axios from 'axios'
-
 import { jwtDecode }from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
-const isTokenExpired = (token) => {
-  if (!token) return true;
-  try {
-    const decodedToken = jwtDecode(token);
-    const currentTime = Date.now() / 1000;
-    console.log(decodedToken);
-    return decodedToken.exp < currentTime;
-  } catch (error) {
-    console.error('Error decoding token:', error);
-    return true;
-  }
-};
+
 
 class ApiConnection {
-  
+  isTokenExpired = (token) => {
+    if (!token) return true;
+    try {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+      return decodedToken.exp < currentTime;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return true;
+    }
+  };
+
   async isAuthen() {
     if (localStorage.getItem('accessToken') && localStorage.getItem('refreshToken')) {
       const token = localStorage.getItem('accessToken');
       const refreshToken = localStorage.getItem('refreshToken');
-      if (isTokenExpired(token)) {
-        if(isTokenExpired(refreshToken)) {
+      if (this.isTokenExpired(token)) {
+        if(this.isTokenExpired(refreshToken)) {
           localStorage.clear();
           if(window.location.pathname !== '/login'){
             window.location.pathname = '/login'
           }
         }
         else {
-          console.log("start refresh")
-          await this.getNewAccessToken(`http://localhost:3000/authen/refresh/${localStorage.getItem('userId')}`);
+          await this.getNewAccessToken(`http://localhost:3000/authen/refresh`);
         }
       }
     } 
@@ -45,12 +44,13 @@ class ApiConnection {
   async getNewAccessToken(url) {
     let refreshToken = `Bearer ${localStorage.getItem('refreshToken')}`;
     let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: refreshToken}}).catch(async function (error) {
+      localStorage.clear();
       if(window.location.pathname !== '/login'){
         window.location.pathname = '/login'
       }
     });
     if(response?.data) {
-      localStorage.clear();
+      await this.tokenToData(response);
     }
     return response?.data;
   }
@@ -64,18 +64,26 @@ class ApiConnection {
     let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).catch(function (error) {
       return(error.response);
     });
-    console.log(response);
     if(response?.data && response?.status !== 401) {
-      console.log("sssss")
-      localStorage.setItem('accessToken', response.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
-      const decodeToken = jwtDecode(response.data.accessToken);
-      localStorage.setItem('userId',decodeToken.id);
-      localStorage.setItem('userName',decodeToken.userName);
-      localStorage.setItem('profileId',decodeToken.profileId);
-      localStorage.setItem('profileName',decodeToken.profileName);
+      await this.tokenToData(response);
     }
     return response?.data;
+  }
+
+  async tokenToData(tokenResponse) {
+    localStorage.setItem('accessToken', tokenResponse.data.accessToken);
+    localStorage.setItem('refreshToken', tokenResponse.data.refreshToken);
+    const decodeToken = jwtDecode(tokenResponse.data.accessToken);
+    localStorage.setItem('userId',decodeToken.id);
+    localStorage.setItem('userName',decodeToken.userName);
+    localStorage.setItem('profileId',decodeToken.profileId);
+    localStorage.setItem('profileName',decodeToken.profileName);
+    if(decodeToken.profileId !== null && decodeToken.profileId !== undefined) {
+      const profileImage = await this.getFile(`http://localhost:3000/profile/image/${decodeToken.profileId}`);
+      if(profileImage) {
+        localStorage.setItem('profileImage',URL.createObjectURL(profileImage));
+      }
+    }
   }
 
   async logout(url) {
@@ -98,6 +106,9 @@ class ApiConnection {
       let errorResponse = await (error.response.data.text());
       return(JSON.parse(errorResponse));
     });
+    if(response?.data?.type !== 'application/octet-stream') {
+      return;
+    }
     return response?.data;
   }
 

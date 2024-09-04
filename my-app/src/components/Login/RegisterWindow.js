@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Notification from "../Notification/Notification";
 import ApiConnection from "../../ApiConnection";
+import { useNavigate } from "react-router-dom";
 
 const RegisterWindow = ({setRegisterMenu,modelUser}) => {
 
@@ -10,6 +11,8 @@ const RegisterWindow = ({setRegisterMenu,modelUser}) => {
 
   const [warning,setWarning] = useState();
 
+  const navigate = new useNavigate;
+
   function handleChange(event,model,set) {
       set({...model,[event.target.name] : event.target.value});
   }
@@ -18,11 +21,11 @@ const RegisterWindow = ({setRegisterMenu,modelUser}) => {
     if(registerUser.userName !== undefined && registerUser.password !== undefined) {
       let preRegister = {...registerUser,created: new Date(),modified: new Date()}
       let data = await apiConnection.authen("http://localhost:3000/authen/sign-up",preRegister);
-      if(data !== undefined) {
-        setRegisterMenu(false);
+      if(data?.message === undefined || data?.message === null) {
+        navigate('/');
       }
       else {
-        setWarning("Register Failed");
+        setWarning(data.message);
       }
     }
   }
