@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import defaultUser from "../../image/defaultUser.png"
 import PropTypes from "prop-types";
 import ApiConnection from "../../ApiConnection";
 import Notification from "../Notification/Notification";
+import { Context } from "../../Context";
 
 function Input({refreshPosts}) {
     const modelInput = {
@@ -13,13 +14,14 @@ function Input({refreshPosts}) {
     const [warning,setWarning] = useState();
     const profileImage = localStorage.getItem('profileImage') ? localStorage.getItem('profileImage') : defaultUser;
 
+    const {profileId} = useContext(Context);
+
     const apiConnection = new ApiConnection;
 
     const addPost = async (input) => {
-        if(localStorage.getItem('profileId')) {
-            let data = await apiConnection.postDataWithFile(`http://localhost:3000/posts/upload/${localStorage.getItem('profileId')}`,input);
-            console.log(data);
-            if(data?.statusCode === 200 && data?.statusCode === 201) {
+        if(profileId) {
+            let data = await apiConnection.postDataWithFile(`http://localhost:3000/posts/upload/${profileId}`,input);
+            if(data?.status === 200 || data?.status === 201) {
                 setPostMenu(false);
                 refreshPosts();
             }

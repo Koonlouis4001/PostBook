@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 class ApiConnection {
-  isTokenExpired = (token) => {
+  isTokenExpired(token) {
     if (!token) return true;
     try {
       const decodedToken = jwtDecode(token);
@@ -46,7 +46,7 @@ class ApiConnection {
     let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: refreshToken}}).catch(async function (error) {
       localStorage.clear();
       if(window.location.pathname !== '/login'){
-        window.location.pathname = '/login'
+        window.location.pathname = '/login';
       }
     });
     if(response?.data) {
@@ -70,13 +70,18 @@ class ApiConnection {
     return response?.data;
   }
 
+  getTokenData(accessToken) {
+    const decodeToken = jwtDecode(accessToken);
+    return [decodeToken.id,decodeToken.profileId];
+  }
+
   async tokenToData(tokenResponse) {
     localStorage.setItem('accessToken', tokenResponse.data.accessToken);
     localStorage.setItem('refreshToken', tokenResponse.data.refreshToken);
     const decodeToken = jwtDecode(tokenResponse.data.accessToken);
-    localStorage.setItem('userId',decodeToken.id);
+    //localStorage.setItem('userId',decodeToken.id);
     localStorage.setItem('userName',decodeToken.userName);
-    localStorage.setItem('profileId',decodeToken.profileId);
+    //localStorage.setItem('profileId',decodeToken.profileId);
     localStorage.setItem('profileName',decodeToken.profileName);
     if(decodeToken.profileId !== null && decodeToken.profileId !== undefined) {
       const profileImage = await this.getFile(`http://localhost:3000/profile/image/${decodeToken.profileId}`);
