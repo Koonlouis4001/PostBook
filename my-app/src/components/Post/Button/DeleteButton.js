@@ -14,13 +14,13 @@ function DeleteButton({post,setDeleteMenu,refreshPosts}) {
 
     const deleteWindow = () => {
         return (
-            <div className="Popup">
-                <div className="Box">
-                    <div className="Popup_Header">
+            <div className="popup">
+                <div className="box">
+                    <div className="popup-header">
                         <div>Are you sure you want to delete this post?</div>
                         <div>Title : {post.title}</div>
                     </div>
-                    <div  className="Popup_Button">
+                    <div  className="popup-button">
                         <button className="btn-delete" onClick={()=>deletePost(post.id)}>Delete</button>
                         <button className="btn-close" onClick={()=>setDeleteMenu(false)}>Close</button>
                     </div>

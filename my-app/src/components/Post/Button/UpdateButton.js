@@ -27,14 +27,14 @@ function UpdateButton({post,setUpdateMenu,refreshPosts}) {
 
     const updateWindow = () => {
         return (
-            <div className="Popup">
-                <div className="Box">
+            <div className="popup">
+                <div className="box">
                     {<Notification warning={warning} setWarning={setWarning}/>}
-                    <div className="Popup_Input">
-                        <div className="Popup_Title">Title</div>
-                        <input className="Popup_Box" type="text" name="title" value={newPost.title} onChange={(e) => handleChange(e)}/>
+                    <div className="popup-input">
+                        <div className="popup-title">Title</div>
+                        <input className="popup-box" type="text" name="title" value={newPost.title} onChange={(e) => handleChange(e)}/>
                     </div>
-                    <div  className="Popup_Button">
+                    <div  className="popup-button">
                         <button className="btn-delete" onClick={()=>updatePost(newPost)}>Update</button>
                         <button className="btn-close" onClick={()=>setUpdateMenu(false)}>Close</button>
                     </div>

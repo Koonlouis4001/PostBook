@@ -41,12 +41,12 @@ function Post({post,refreshPosts}) {
     },[])
 
     return (
-        <div className="Post">
+        <div className="post">
             {updateMenu && <UpdateButton post={post} setUpdateMenu={setUpdateMenu} refreshPosts={refreshPosts}/>}
             {deleteMenu && <DeleteButton post={post} setDeleteMenu={setDeleteMenu} refreshPosts={refreshPosts}/>}
-            <div className="Post__header">
-                <div className="Post__profile">
-                    <div className="Post__profile__image">
+            <div className="post-header">
+                <div className="post-profile">
+                    <div className="post-profile-image">
                         <img src={image === undefined ? defaultUser : `${image}`} alt="user"/>
                     </div>
                     <div>
@@ -62,18 +62,14 @@ function Post({post,refreshPosts}) {
                     <button ref={buttonRef} onClick={() => setShowMenu(!showMenu)}>...</button>
                     <div className="p-relative">
                         {showMenu && 
-                        <div className="d-flex flex-col gap-4 Post__menu">
+                        <div className="d-flex flex-col gap-4 post-menu">
                             <button onClick={() => {setUpdateMenu(true); setShowMenu(false);}}>Edit Post</button>
                             <button onClick={() => {setDeleteMenu(true); setShowMenu(false);}}>Delete Post</button>
                         </div>}
                     </div>
                 </div>
             </div>
-            <div className="Post__title">{post?.title}</div>
-            {/*<div className="Post__title">Likes: {post?.likes}</div>
-            <div className="Post__title">Created: {moment(post?.created).format("DD-MM-YYYY HH:mm:ss.SSS")}</div>
-            <div className="Post__title">Last Modified: {moment(post?.modified).format("DD-MM-YYYY HH:mm:ss.SSS")}</div>*/}
-            {/*<img className="Post__image" src={`https://picsum.photos/id/${post?.id}/1920/1080`}/>*/}
+            <div className="post-title">{post?.title}</div>
             <PostImage id={post?.id}/>
         </div>
     )

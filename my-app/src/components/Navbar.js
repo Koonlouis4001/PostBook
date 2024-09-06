@@ -16,7 +16,7 @@ function Navbar() {
         <div className="navbar-container">
             <div className="navbar">
                 <div>Facebook</div>
-                <div className="Page__Link">
+                <div className="page-link">
                     <Link to={'/'}>Post</Link>
                     <Link to={'/profile/'}>Profile</Link>
                     <a onClick={() => (logout())}>Logout</a>

@@ -49,9 +49,8 @@ function Input({refreshPosts}) {
         return (
             <div className="modal-overlay">
                 <div className="modal">
-                    
                     <div className="d-flex flex-col gap-4">
-                        <div className="Post__header">
+                        <div className="post-header">
                             <div> สร้างโพสต์ </div>
                             <button onClick={()=>setPostMenu(false)}>X</button>
                         </div>
@@ -72,25 +71,16 @@ function Input({refreshPosts}) {
     }
 
     return (
-        <div className="Input">
+        <div className="input">
             {postMenu && postWindow()}
-            <div className="d-flex Input__header">
-                <div className="Post__profile__image">
+            <div className="d-flex input-header">
+                <div className="post-profile-image">
                     <img src={profileImage} alt="user"/>
                 </div>
-                <div className="Input__button" onClick={() => handlePostMenu()}>
+                <div className="input-button" onClick={() => handlePostMenu()}>
                     คุณกำลังคิดอะไรอยู่?
                 </div>
             </div>
-            
-            {/*<div className="Input__header">Create Post</div>
-            <input
-                className="Input__field"
-                type="text"
-                value={input}
-                onChange={onChange}
-                onKeyDown={onKeyDown}
-            />*/}
         </div>
     )
 }

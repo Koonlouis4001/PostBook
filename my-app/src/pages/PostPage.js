@@ -32,7 +32,7 @@ function PostPage() {
 
   return (
     <Context.Provider value={{userId,profileId}}>
-      <div className="Post__page">
+      <div className="post-page">
         <Input refreshPosts={refreshPosts}/>
         {posts?.map((post) => (<Post post={post} refreshPosts={refreshPosts} key={post?.id}/>))}
       </div>

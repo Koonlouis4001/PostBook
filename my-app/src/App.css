@@ -2,14 +2,57 @@
   box-sizing: border-box;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+.p-relative {
+  position: relative;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
 body {
   margin: 0;
   background: #e9ebee;
   color: #1d2129;
 }
 
-.App {
+.app {
   background-color: white;
+}
+
+.box {
+  position: relative;
+  width: 50%;
+  min-height: 100px;
+  background-color: #fff;
+  border: 1px solid #999;
+  border-radius: 4px;
+  margin: 20px auto;
+  padding: 10px 0;
+}
+
+.btn-close {
+  min-width: 60px;
+  min-height: 25px;
+  padding: 0px 20px;
+}
+
+.btn-delete {
+  min-width: 60px;
+  min-height: 25px;
+  padding: 0px 20px;
 }
 
 .navbar-container {
@@ -29,7 +72,7 @@ body {
   top: 0;
 }
 
-.Input, .Post {
+.input, .post {
   border: 1px solid hsl(216, 8%, 88%);
   border-radius: 4px;
   width: 576px;
@@ -37,11 +80,11 @@ body {
   background-color: white;
 }
 
-.Input__header {
+.input-header {
   padding: 10px;
 }
 
-.Input__button {
+.input-button {
   width: 100%;
   border-radius: 20px;
   text-align: left;
@@ -49,7 +92,7 @@ body {
   padding: 0px 10px;
   background-color: #e9ebee;
 }
-.Input__button:hover {
+.input-button:hover {
   width: 100%;
   background-color: rgb(194, 198, 206);
   border-radius: 20px;
@@ -57,7 +100,7 @@ body {
   cursor: pointer;
 }
 
-.Input__field {
+.input-field {
   width: 100%;
   height: 100px;
   padding: 10px;
@@ -66,46 +109,46 @@ body {
   border: none;
 }
 
-.Input__field.focus {
+.input-field.focus {
   outline: none;
 }
 
-.Post {
+.post {
   padding: 10px;
 }
 
-.Post__page {
+.post-page {
   background-color: white;
   gap: 10px;
   display: grid;
 }
 
-.Post__image {
+.post-image {
   width: 100%;
   margin-top: 15px;
 }
 
-.Page__Link * {
+.page-link * {
   padding: 0px 20px;
   color: white;
   text-decoration: none;
   cursor: pointer;
 }
 
-.Post__menu {
+.post-menu {
   position: absolute;
   top: 1rem;
   right: 0;
   min-width: 100px;
 }
 
-.Post__header {
+.post-header {
   width: 100%;
   display: flex;
   justify-content: space-between;
 }
 
-.Post__profile__image {
+.post-profile-image {
   width: 40px;
   height: 40px;
   min-width: 40px;
@@ -114,19 +157,35 @@ body {
   overflow: hidden;
 }
 
-.Post__profile__image > * {
+.post-profile-image > * {
   width: 100%;
   height: 100%;
 }
 
-.Post__profile {
+.post-profile {
   text-wrap: wrap;
   display: flex;
   align-items: center;
 }
 
-.Popup {
+.post-input {
+  display: flex;
+  width: 100%;
+  padding: 5px 5px;
+  border: solid;
+  border-color: rgb(194, 198, 206);
+  border-width: 2px;
+  border-left: none;
+  border-right: none;
+}
+
+.post-input:focus {
+  outline: none;
+}
+
+.popup {
   position: fixed;
+  align-content: center;
   left: 0;
   top: 0;
   width: 100%;
@@ -134,23 +193,22 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.Popup_Header {
+.popup-header {
   text-align: center;
   padding: 10px 20px;
-  display: flex;
 }
 
-.Popup_Title {
+.popup-title {
   padding-right: 10px;
   width: 90px;
 }
 
-.Popup_Box {
+.popup-box {
   width: 100%;
   padding: 0 10px;
 }
 
-.Popup_Input {
+.popup-input {
   padding: 10px 0;
   grid-template-columns: 10% 80%;
   display: grid;
@@ -160,35 +218,12 @@ body {
   margin: 0 auto;
 }
 
-.Box {
-  position: relative;
-  width: 50%;
-  min-height: 100px;
-  background-color: #fff;
-  border: 1px solid #999;
-  border-radius: 4px;
-  margin: 20px auto;
-  padding: 10px 0;
-}
-
-.Popup_Button {
+.popup-button {
   display: flex;
   padding: 0px 20px;
   margin-left: auto;
   text-align: center;
   justify-content: space-evenly;
-}
-
-.btn-close {
-  min-width: 60px;
-  min-height: 25px;
-  padding: 0px 20px;
-}
-
-.btn-delete {
-  min-width: 60px;
-  min-height: 25px;
-  padding: 0px 20px;
 }
 
 .login-page {
@@ -279,21 +314,6 @@ body {
   width: 100%;
 }
 
-.post-input {
-  display: flex;
-  width: 100%;
-  padding: 5px 5px;
-  border: solid;
-  border-color: rgb(194, 198, 206);
-  border-width: 2px;
-  border-left: none;
-  border-right: none;
-}
-
-.post-input:focus {
-  outline: none;
-}
-
 .notification {
   display: flex;
   justify-content: space-between;
@@ -304,28 +324,8 @@ body {
   padding: 5px 5px;
 }
 
-.pointer {
-  cursor: pointer;
-}
-
 .main-page {
   background-color: white;
   width: 100vw;
   height: 100vh;
-}
-
-.p-relative {
-  position: relative;
-}
-
-.d-flex {
-  display: flex;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-.gap-4 {
-  gap: 1rem;
 }

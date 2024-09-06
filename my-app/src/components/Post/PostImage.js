@@ -19,14 +19,9 @@ function PostImage({id}) {
         showImage();
     },[])
 
-    {/*return (
-        <div>
-            <img className="Post__image" src={image === undefined ? `https://picsum.photos/id/${id}/1920/1080` : `${image}`}/>
-        </div>
-    )*/}
     return (image &&
         <div>
-            <img className="Post__image" src={image}/>
+            <img className="post-image" src={image}/>
         </div>
     )
 }

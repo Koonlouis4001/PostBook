@@ -4,7 +4,7 @@ import '../App.css';
 function ProfilePage() {
 
   return (
-    <div className="App">
+    <div className="app">
       PROFILE PAGE
     </div>
   );
