@@ -21,14 +21,21 @@ export class AuthenService {
     private readonly configService: ConfigService,
   ) {}
 
-  async signUp(createUserDto: CreateUserDto) {
-    const {userName,password} = createUserDto;
+  async signUp(signUpAuthenDto: SignUpAuthenDto) {
+    const {userName,password} = signUpAuthenDto;
+    if(userName.trim().length === 0) {
+      throw new BadRequestException('Username is empty');
+    }
+    if(password.trim().length === 0) {
+      throw new BadRequestException('Password is empty');
+    }
     const user = await this.userService.findByUsername(userName);
     if(user) {
       throw new BadRequestException('This user is already exist');
     }
     const hashPassword = await this.hashData(password);
-    const newUser = await this.userService.create({...createUserDto,password: hashPassword});
+    const currentDate = new Date();
+    const newUser = await this.userService.create({...signUpAuthenDto,password: hashPassword});
     const tokens = await this.getTokens(newUser.id, newUser.userName,newUser.profile?.id,newUser.profile?.profileName);
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
     return tokens;
@@ -36,6 +43,12 @@ export class AuthenService {
 
   async signIn(signInAuthenDto: SignInAuthenDto) {
     const {userName,password} = signInAuthenDto;
+    if(userName.trim().length === 0) {
+      throw new BadRequestException('Username is empty');
+    }
+    if(password.trim().length === 0) {
+      throw new BadRequestException('Password is empty');
+    }
     const user = await this.userService.findByUsername(userName);
     if(!user) {
       throw new UnauthorizedException('Invalid username or password');

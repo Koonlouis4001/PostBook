@@ -10,7 +10,7 @@ export class Post {
     @Expose()
     id: number;
 
-    @Column({ type: 'varchar', length: 100, name: 'title' })
+    @Column({ type: 'varchar', length: 1000, name: 'title' })
     @Expose()
     title: string;
 

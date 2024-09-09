@@ -8,12 +8,4 @@ export class SignUpAuthenDto {
     @IsString()
     @IsNotEmpty()
     password: string;
-
-    @IsDateString()
-    @IsNotEmpty()
-    created: Date;
-
-    @IsDateString()
-    @IsNotEmpty()
-    modified: Date;
 }
