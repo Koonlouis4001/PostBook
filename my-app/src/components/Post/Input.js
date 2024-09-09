@@ -56,7 +56,7 @@ function Input({refreshPosts}) {
                         </div>
                         {<Notification warning={warning} setWarning={setWarning}/>}
                         <div>
-                            <input className="post-input" type="text" name="title" placeholder="คุณกำลังคิดอะไรอยู่?" value={input.title} onChange={(e) => handleChange(e,input,setInput)}/>
+                            <input className="post-input" type="text" name="title" placeholder={`${localStorage.getItem('profileName')} คุณกำลังคิดอะไรอยู่?`} value={input.title} onChange={(e) => handleChange(e,input,setInput)}/>
                         </div>
                         <div>
                             <input type="file" name="file" onChange={(e) => handleChange(e,input,setInput)}/>
@@ -78,7 +78,7 @@ function Input({refreshPosts}) {
                     <img src={profileImage} alt="user"/>
                 </div>
                 <div className="input-button" onClick={() => handlePostMenu()}>
-                    คุณกำลังคิดอะไรอยู่?
+                    {localStorage.getItem('profileName')} คุณกำลังคิดอะไรอยู่?
                 </div>
             </div>
         </div>

@@ -61,16 +61,14 @@ class ApiConnection {
   }
 
   async authen(url,data) {
-    let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).catch(function (error) {
+    let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).then(async (res) => await this.tokenToData(res)).catch(function (error) {
       return(error.response);
     });
-    if(response?.data && response?.status !== 401) {
-      await this.tokenToData(response);
-    }
     return response?.data;
   }
 
   getTokenData(accessToken) {
+    if(!accessToken) return [];
     const decodeToken = jwtDecode(accessToken);
     return [decodeToken.id,decodeToken.profileId];
   }

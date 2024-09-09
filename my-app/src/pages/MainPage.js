@@ -10,7 +10,7 @@ const MainPage = () => {
   const [loading,setLoading] = useState(false);
   const initialized = useRef(false)
 
-  const isAuthen = async () => {
+  const Authentication = async () => {
     await apiConnection.isAuthen();
     setLoading(true);
   }
@@ -19,7 +19,7 @@ const MainPage = () => {
     (async () => {
       if(!initialized.current) {
         initialized.current = true;
-        await isAuthen();
+        await Authentication();
       }
     })();
   },[])
@@ -29,6 +29,7 @@ const MainPage = () => {
       <Route path='/login' element={<LoginPage/>} />
       <Route path='/' element={<PostPage />} />
       <Route path='/profile/' element={<ProfilePage />} />
+      <Route path='/profile/:id' element={<ProfilePage />} />
     </Routes>
   ) :
   <div>LOADING</div>;

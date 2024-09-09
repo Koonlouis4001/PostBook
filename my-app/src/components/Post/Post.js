@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import defaultUser from "../../image/defaultUser.png"
@@ -7,6 +7,7 @@ import ApiConnection from "../../ApiConnection";
 import Notification from "../Notification/Notification";
 import DeleteButton from "./Button/DeleteButton";
 import UpdateButton from "./Button/UpdateButton";
+import { Context } from "../../Context";
 
 function Post({post,refreshPosts}) {
     const [showMenu,setShowMenu] = useState(false);
@@ -15,6 +16,7 @@ function Post({post,refreshPosts}) {
     const [image,setImage] = useState();
     const buttonRef = useRef(null);
     const menuRef = useRef(null);
+    const {profileId} = useContext(Context);
 
     const apiConnection = new ApiConnection();
 
@@ -27,7 +29,7 @@ function Post({post,refreshPosts}) {
     }
 
     const handleOutsideClick = (event) => {
-        if(menuRef.current && !menuRef.current.contains(event.target) && event.target !== buttonRef.current) {
+        if(menuRef.current && !(menuRef.current.contains(event.target)) && event.target !== buttonRef.current) {
             setShowMenu(false);
         }
     }
@@ -58,16 +60,18 @@ function Post({post,refreshPosts}) {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <button ref={buttonRef} onClick={() => setShowMenu(!showMenu)}>...</button>
-                    <div className="p-relative">
-                        {showMenu && 
-                        <div className="d-flex flex-col gap-4 post-menu">
-                            <button onClick={() => {setUpdateMenu(true); setShowMenu(false);}}>Edit Post</button>
-                            <button onClick={() => {setDeleteMenu(true); setShowMenu(false);}}>Delete Post</button>
-                        </div>}
+                {profileId === post?.profile?.id &&
+                    <div>
+                        <button ref={buttonRef} onClick={() => setShowMenu(!showMenu)}>...</button>
+                        <div ref={menuRef} className="p-relative">
+                            {showMenu && 
+                            <div className="d-flex flex-col gap-4 post-menu">
+                                <button onClick={() => {setUpdateMenu(true); setShowMenu(false);}}>Edit Post</button>
+                                <button onClick={() => {setDeleteMenu(true); setShowMenu(false);}}>Delete Post</button>
+                            </div>}
+                        </div>
                     </div>
-                </div>
+                }
             </div>
             <div className="post-title">{post?.title}</div>
             <PostImage id={post?.id}/>
