@@ -24,6 +24,11 @@ export class PostsController {
     return this.postsService.preview(id);
   }
 
+  @Get('profile/:profileId')
+  findFromProfileId(@Param('profileId') profileId: number) {
+    return this.postsService.findFromProfile(profileId);
+  }
+
   @Get()
   findAll() {
     return this.postsService.findAll();

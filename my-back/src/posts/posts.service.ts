@@ -41,6 +41,11 @@ export class PostsService {
     throw new HttpException(message, HttpStatus.BAD_REQUEST);
   }
 
+  async findFromProfile(profileId: number){
+    const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).getMany();
+    return instanceToPlain(response);
+  }
+
   async findAll() {
     const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").orderBy({'posts.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
