@@ -6,6 +6,7 @@ import { AuthGuard } from 'src/authen/authen.guard';
 import { FileInterceptor, NoFilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
+import { PaginationPostDto } from './dto/pagination-post.dto';
 
 @Controller('posts')
 @UseGuards(AuthGuard)
@@ -25,17 +26,17 @@ export class PostsController {
   }
 
   @Get('profile/:profileId')
-  findFromProfileId(@Param('profileId') profileId: number) {
-    return this.postsService.findFromProfile(profileId);
+  findFromProfileId(@Param('profileId') profileId: number,@Body() paginationPostDto: PaginationPostDto) {
+    return this.postsService.findFromProfile(profileId,paginationPostDto);
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Body() paginationPostDto: PaginationPostDto) {
+    return this.postsService.findAll(paginationPostDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: number,@Body() paginationPostDto: PaginationPostDto) {
     return this.postsService.findOne(id);
   }
 

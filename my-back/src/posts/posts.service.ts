@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/posts.entity';
 import { Profile } from 'src/profile/entities/profile.entity';
 import { instanceToPlain } from 'class-transformer';
+import { PaginationPostDto } from './dto/pagination-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -41,13 +42,13 @@ export class PostsService {
     throw new HttpException(message, HttpStatus.BAD_REQUEST);
   }
 
-  async findFromProfile(profileId: number){
-    const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).getMany();
+  async findFromProfile(profileId: number,paginationPostDto: PaginationPostDto){
+    const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).skip(10 * paginationPostDto.page).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
     return instanceToPlain(response);
   }
 
-  async findAll() {
-    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").orderBy({'posts.id':'ASC'}).getMany();
+  async findAll(paginationPostDto: PaginationPostDto) {
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").skip(10 * paginationPostDto.page).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 
