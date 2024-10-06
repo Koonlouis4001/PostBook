@@ -48,7 +48,7 @@ export class PostsService {
   }
 
   async findPaginationFromProfile(profileId: number,paginationPostDto: PaginationPostDto){
-    const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).skip(10 * paginationPostDto.page).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
+    const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).skip(10 * (paginationPostDto.page - 1)).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
     return instanceToPlain(response);
   }
 
@@ -58,7 +58,7 @@ export class PostsService {
   }
 
   async findPaginationAll(paginationPostDto: PaginationPostDto) {
-    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").skip(10 * paginationPostDto.page).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").skip(10 * (paginationPostDto.page - 1)).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 

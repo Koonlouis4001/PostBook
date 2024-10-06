@@ -16,8 +16,13 @@ function PostPage() {
   const apiConnection = new ApiConnection();
   const [userId,profileId] = apiConnection.getTokenData(localStorage.getItem('accessToken'));
 
+  const [pagination,setPagination] = useState({
+    page: 1,
+    row: 10,
+  })
+
   const refreshPosts = async () => {
-    let data = await apiConnection.getData("http://localhost:3000/posts/");
+    let data = await apiConnection.postData("http://localhost:3000/posts/pagination/",pagination);
     if(data?.message === undefined || data?.message === null) {
       setPosts(data);
     }

@@ -16,6 +16,11 @@ function ProfilePage() {
   const [profileImage,setProfileImage] = useState();
   const [posts,setPost] = useState([]);
 
+  const [pagination,setPagination] = useState({
+    page: 1,
+    row: 10,
+  })
+
   const getProfile = async () => {
     let profileData = await apiConnection.getData(`http://localhost:3000/profile/${id}`);
     let image = await apiConnection.getFile(`http://localhost:3000/profile/image/${id}`)
@@ -27,7 +32,8 @@ function ProfilePage() {
   }
 
   const refreshPosts = async () => {
-    let postData = await apiConnection.getData(`http://localhost:3000/posts/profile/${id}`);
+    let postData = await apiConnection.postData(`http://localhost:3000/posts/pagination/profile/${id}`,pagination);
+    console.log(postData);
     if(postData) {
       setPost(postData);
     }
