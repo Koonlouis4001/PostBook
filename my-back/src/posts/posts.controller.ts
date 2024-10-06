@@ -26,17 +26,27 @@ export class PostsController {
   }
 
   @Get('profile/:profileId')
-  findFromProfileId(@Param('profileId') profileId: number,@Body() paginationPostDto: PaginationPostDto) {
-    return this.postsService.findFromProfile(profileId,paginationPostDto);
+  findFromProfileId(@Param('profileId') profileId: number) {
+    return this.postsService.findFromProfile(profileId);
+  }
+
+  @Post('pagination/profile/:profileId')
+  findPaginationFromProfileId(@Param('profileId') profileId: number,@Body() paginationPostDto: PaginationPostDto) {
+    return this.postsService.findPaginationFromProfile(profileId,paginationPostDto);
   }
 
   @Get()
-  findAll(@Body() paginationPostDto: PaginationPostDto) {
-    return this.postsService.findAll(paginationPostDto);
+  findAll() {
+    return this.postsService.findAll();
+  }
+
+  @Post('pagination')
+  findPaginationAll(@Body() paginationPostDto: PaginationPostDto) {
+    return this.postsService.findPaginationAll(paginationPostDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number,@Body() paginationPostDto: PaginationPostDto) {
+  findOne(@Param('id') id: number) {
     return this.postsService.findOne(id);
   }
 

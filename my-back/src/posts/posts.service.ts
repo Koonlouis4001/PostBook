@@ -42,12 +42,22 @@ export class PostsService {
     throw new HttpException(message, HttpStatus.BAD_REQUEST);
   }
 
-  async findFromProfile(profileId: number,paginationPostDto: PaginationPostDto){
+  async findFromProfile(profileId: number){
+    const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).getMany();
+    return instanceToPlain(response);
+  }
+
+  async findPaginationFromProfile(profileId: number,paginationPostDto: PaginationPostDto){
     const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).skip(10 * paginationPostDto.page).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
     return instanceToPlain(response);
   }
 
-  async findAll(paginationPostDto: PaginationPostDto) {
+  async findAll() {
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").orderBy({'posts.id':'ASC'}).getMany();
+    return instanceToPlain(response,{ strategy: 'excludeAll'});
+  }
+
+  async findPaginationAll(paginationPostDto: PaginationPostDto) {
     const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").skip(10 * paginationPostDto.page).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
