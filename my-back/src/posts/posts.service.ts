@@ -43,12 +43,12 @@ export class PostsService {
   }
 
   async findFromProfile(profileId: number){
-    const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).getMany();
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").where("posts.profile = :profileId", { profileId: profileId }).getMany();
     return instanceToPlain(response);
   }
 
   async findPaginationFromProfile(profileId: number,paginationPostDto: PaginationPostDto){
-    const response = await this.postRepository.createQueryBuilder("posts").where("posts.profile = :profileId", { profileId: profileId }).skip(10 * (paginationPostDto.page - 1)).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").where("posts.profile = :profileId", { profileId: profileId }).skip(10 * (paginationPostDto.page - 1)).take(paginationPostDto.row).orderBy({'posts.created':'DESC'}).getMany();
     return instanceToPlain(response);
   }
 
@@ -58,7 +58,7 @@ export class PostsService {
   }
 
   async findPaginationAll(paginationPostDto: PaginationPostDto) {
-    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").skip(10 * (paginationPostDto.page - 1)).take(paginationPostDto.row).orderBy({'posts.id':'ASC'}).getMany();
+    const response = await this.postRepository.createQueryBuilder("posts").leftJoinAndSelect("posts.profile","profile").skip(10 * (paginationPostDto.page - 1)).take(paginationPostDto.row).orderBy({'posts.created':'DESC'}).getMany();
     return instanceToPlain(response,{ strategy: 'excludeAll'});
   }
 
@@ -70,7 +70,8 @@ export class PostsService {
   async update(id: number, updatePostDto: UpdatePostDto) {
     const post = await this.postRepository.findOneBy({id});
     post.title = updatePostDto.title;
-    post.modified = updatePostDto.modified;
+    const currentDateTime = new Date();
+    post.modified = currentDateTime;
     post.likes = updatePostDto.likes;
     const updatePost = await this.postRepository.save(post);
     return instanceToPlain(updatePost,{ strategy: 'excludeAll'});

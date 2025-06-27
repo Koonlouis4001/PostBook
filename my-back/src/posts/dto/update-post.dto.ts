@@ -8,8 +8,4 @@ export class UpdatePostDto {
     @IsNumber()
     @IsOptional()
     readonly likes?: number;
-
-    @IsDateString()
-    @IsOptional()
-    readonly modified?: Date;
 }

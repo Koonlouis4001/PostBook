@@ -12,10 +12,6 @@ export class UpdateUserDto {
     @IsOptional()
     refreshToken: string;
 
-    @IsDateString()
-    @IsOptional()
-    modified: Date;
-
     @IsOptional()
     profile: Profile
 }

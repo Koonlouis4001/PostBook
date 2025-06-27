@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsNotEmpty, IsOptional, IsString, IsNumber } from "class-validator";
 
 export class CreateProfileDto {
     @IsString()
@@ -9,11 +9,7 @@ export class CreateProfileDto {
     @IsOptional()
     readonly profileStatus: string;
 
-    @IsDateString()
+    @IsNumber()
     @IsNotEmpty()
-    readonly created: Date;
-
-    @IsDateString()
-    @IsNotEmpty()
-    readonly modified: Date;
+    readonly userId: number;
 }

@@ -54,7 +54,8 @@ export class UserService {
     const user = await this.userRepository.findOneBy({id})
     user.password = updateUserDto.password;
     user.refreshToken = updateUserDto.refreshToken;
-    user.modified = updateUserDto.modified;
+    const currentDateTime = new Date();
+    user.modified = currentDateTime;
     user.profile = updateUserDto.profile;
     const updateUser = await this.userRepository.save(user);
     return instanceToPlain(updateUser,{ strategy: 'excludeAll'});

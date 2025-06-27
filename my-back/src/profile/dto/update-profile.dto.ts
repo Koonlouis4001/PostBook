@@ -8,8 +8,4 @@ export class UpdateProfileDto {
     @IsString()
     @IsOptional()
     readonly profileStatus: string;
-
-    @IsDateString()
-    @IsOptional()
-    readonly modified: Date;
 }

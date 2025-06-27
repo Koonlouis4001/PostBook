@@ -5,11 +5,13 @@ import { Profile } from './entities/profile.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
   async create(createProfileDto: CreateProfileDto) {
@@ -20,6 +22,9 @@ export class ProfileService {
     profile.created = currentDateTime;
     profile.modified = currentDateTime;
     const createProfile = await this.profileRepository.save(profile);
+    const user : User = await this.userRepository.findOneBy({id: createProfileDto.userId});
+    user.profile = createProfile;
+    const updateUser = await this.userRepository.save(user);
     return instanceToPlain(createProfile,{ strategy: 'excludeAll'});
   }
 
