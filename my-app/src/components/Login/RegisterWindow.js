@@ -19,8 +19,7 @@ const RegisterWindow = ({setRegisterMenu,modelUser}) => {
 
   async function register() {
     if(registerUser.userName !== undefined && registerUser.password !== undefined) {
-      let preRegister = {...registerUser,created: new Date(),modified: new Date()}
-      let data = await apiConnection.authen("http://localhost:3000/authen/sign-up",preRegister);
+      let data = await apiConnection.authen(`authen/sign-up`,registerUser);
       if(data?.message === undefined || data?.message === null) {
         navigate('/');
       }

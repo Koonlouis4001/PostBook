@@ -8,8 +8,15 @@ import Notification from "../Notification/Notification";
 import DeleteButton from "./Button/DeleteButton";
 import UpdateButton from "./Button/UpdateButton";
 import { Context } from "../../Context";
+import { Link } from "react-router-dom";
 
-function Post({post,refreshPosts}) {
+Post.propTypes = {
+    post: PropTypes.object.isRequired,
+    updatePost: PropTypes.func.isRequired,
+    removePost: PropTypes.func.isRequired,
+}
+
+function Post({post,updatePost,removePost}) {
     const [showMenu,setShowMenu] = useState(false);
     const [updateMenu,setUpdateMenu] = useState(false);
     const [deleteMenu,setDeleteMenu] = useState(false);
@@ -21,7 +28,10 @@ function Post({post,refreshPosts}) {
     const apiConnection = new ApiConnection();
 
     const showImage = async () => {
-        let data = await apiConnection.getFile(`http://localhost:3000/profile/image/${post?.profile?.id}`);
+        if(post?.profile?.id === undefined || post?.profile?.id === null) {
+            return;
+        }
+        let data = await apiConnection.getFile(`profile/image/${post?.profile?.id}`);
         if(data !== undefined) {
             var blobURL = URL.createObjectURL(data);
             setImage(blobURL);
@@ -44,17 +54,21 @@ function Post({post,refreshPosts}) {
 
     return (
         <div className="post">
-            {updateMenu && <UpdateButton post={post} setUpdateMenu={setUpdateMenu} refreshPosts={refreshPosts}/>}
-            {deleteMenu && <DeleteButton post={post} setDeleteMenu={setDeleteMenu} refreshPosts={refreshPosts}/>}
+            {updateMenu && <UpdateButton post={post} setUpdateMenu={setUpdateMenu} updatePost={updatePost}/>}
+            {deleteMenu && <DeleteButton post={post} setDeleteMenu={setDeleteMenu} removePost={removePost}/>}
             <div className="post-header">
                 <div className="post-profile">
-                    <div className="post-profile-image">
-                        <img src={image === undefined ? defaultUser : `${image}`} alt="user"/>
-                    </div>
-                    <div>
-                        <div>
-                            {post?.profile?.profileName}
+                    <Link to={`/profile/${post?.profile?.id}`}>
+                        <div className="post-profile-image">
+                            <img src={image === undefined ? defaultUser : `${image}`} alt="user"/>
                         </div>
+                    </Link>
+                    <div>
+                        <Link to={`/profile/${post?.profile?.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div>
+                                {post?.profile?.profileName}
+                            </div>
+                        </Link>
                         <div>
                             {moment(post?.created).format("DD-MM-YYYY HH:mm:ss.SSS")}
                         </div>
@@ -77,11 +91,6 @@ function Post({post,refreshPosts}) {
             <PostImage id={post?.id}/>
         </div>
     )
-}
-
-Post.propTypes = {
-    post: PropTypes.object.isRequired,
-    refreshPosts: PropTypes.func.isRequired,
 }
 
 export default Post;

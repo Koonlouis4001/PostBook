@@ -2,14 +2,20 @@ import React, { useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ApiConnection from "../../../ApiConnection";
 
-function DeleteButton({post,setDeleteMenu,refreshPosts}) {
+DeleteButton.propTypes = {
+    post: PropTypes.object.isRequired,
+    setDeleteMenu: PropTypes.func.isRequired,
+    removePost: PropTypes.func.isRequired,
+}
+
+function DeleteButton({post,setDeleteMenu,removePost}) {
 
     const apiConnection = new ApiConnection();
     
     const deletePost = async (id) => {
-        let data = await apiConnection.deleteData(`http://localhost:3000/posts/${id}`);
+        let result = await apiConnection.deleteData(`posts/${id}`);
+        removePost(id);
         setDeleteMenu(false);
-        refreshPosts();
     }
 
     const deleteWindow = () => {
@@ -30,12 +36,6 @@ function DeleteButton({post,setDeleteMenu,refreshPosts}) {
     }
 
     return (deleteWindow())
-}
-
-DeleteButton.propTypes = {
-    post: PropTypes.object.isRequired,
-    setDeleteMenu: PropTypes.func.isRequired,
-    refreshPosts: PropTypes.func.isRequired,
 }
 
 export default DeleteButton;

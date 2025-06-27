@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import PostPage from "./PostPage";
 import ProfilePage from "./ProfilePage";
 import LoginPage from "./LoginPage";
+import RegisterPage from "./RegisterPage";
 import ApiConnection from "../ApiConnection";
 
 const MainPage = () => {
@@ -30,6 +31,7 @@ const MainPage = () => {
       <Route path='/' element={<PostPage />} />
       <Route path='/profile/' element={<ProfilePage />} />
       <Route path='/profile/:id' element={<ProfilePage />} />
+      <Route path='/register' element={<RegisterPage />} />
     </Routes>
   ) :
   <div>LOADING</div>;

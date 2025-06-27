@@ -3,21 +3,26 @@ import PropTypes from "prop-types";
 import ApiConnection from "../../../ApiConnection";
 import Notification from "../../Notification/Notification";
 
-function UpdateButton({post,setUpdateMenu,refreshPosts}) {
+UpdateButton.propTypes = {
+    post: PropTypes.object.isRequired,
+    setUpdateMenu: PropTypes.func.isRequired,
+    updatePost: PropTypes.func.isRequired,
+}
+
+function UpdateButton({post,setUpdateMenu,updatePost}) {
     const [warning,setWarning] = useState();
     const [newPost,setNewPost] = useState(post);
     const apiConnection = new ApiConnection();
 
-    const updatePost = async (post) => {
-        let data = await apiConnection.patchData(`http://localhost:3000/posts/${post.id}`,newPost);
-        console.log(data)
-        if(data?.statusCode === 200 && data?.statusCode === 201) {
+    const update = async (post) => {
+        let result = await apiConnection.patchData(`posts/${post.id}`,newPost);
+        //console.log(result)
+        if(result?.status === 200 || result?.status === 201) {
+            updatePost(result.data);
             setUpdateMenu(false);
-            refreshPosts();
-            
         }
         else {
-            setWarning(data.message);
+            setWarning(result.message);
         }
     }
 
@@ -35,7 +40,7 @@ function UpdateButton({post,setUpdateMenu,refreshPosts}) {
                         <input className="popup-box" type="text" name="title" value={newPost.title} onChange={(e) => handleChange(e)}/>
                     </div>
                     <div  className="popup-button">
-                        <button className="btn-delete" onClick={()=>updatePost(newPost)}>Update</button>
+                        <button className="btn-delete" onClick={()=>update(newPost)}>Update</button>
                         <button className="btn-close" onClick={()=>setUpdateMenu(false)}>Close</button>
                     </div>
                 </div>
@@ -44,12 +49,6 @@ function UpdateButton({post,setUpdateMenu,refreshPosts}) {
     }
 
     return (updateWindow())
-}
-
-UpdateButton.propTypes = {
-    post: PropTypes.object.isRequired,
-    setUpdateMenu: PropTypes.func.isRequired,
-    refreshPosts: PropTypes.func.isRequired,
 }
 
 export default UpdateButton;

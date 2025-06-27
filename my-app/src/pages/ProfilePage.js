@@ -14,16 +14,38 @@ function ProfilePage() {
   const navigate = useNavigate();
   const [profile,setProfile] = useState();
   const [profileImage,setProfileImage] = useState();
-  const [posts,setPost] = useState([]);
+  const [posts,setPosts] = useState([]);
 
   const [pagination,setPagination] = useState({
     page: 1,
     row: 10,
   })
 
+  const updatePost = (post) => {
+    //console.log("Post updated:", post);
+    setPosts((prevPosts) => {
+      return prevPosts.map((p) => {
+        if(p.id === post.id) {
+          return {id: post.id, title: post.title, created: post.created, modified: post.modified, profile: p.profile, likes: post.likes};
+        }
+        return p;
+      });
+    });
+  }
+
+  const removePost =  (postId) => {
+    //console.log("Post remove:", postId);
+    setPosts((prevPosts) => {
+      return prevPosts.filter((p) => p.id !== postId);
+    });
+  }
+
   const getProfile = async () => {
-    let profileData = await apiConnection.getData(`http://localhost:3000/profile/${id}`);
-    let image = await apiConnection.getFile(`http://localhost:3000/profile/image/${id}`)
+    if(id === undefined || id === null) {
+      return;
+    }
+    let profileData = await apiConnection.getData(`profile/${id}`);
+    let image = await apiConnection.getFile(`profile/image/${id}`);
     if(image !== undefined) {
       var blobURL = URL.createObjectURL(image);
       setProfileImage(blobURL);
@@ -32,10 +54,10 @@ function ProfilePage() {
   }
 
   const refreshPosts = async () => {
-    let postData = await apiConnection.postData(`http://localhost:3000/posts/pagination/profile/${id}`,pagination);
-    console.log(postData);
+    let postData = await apiConnection.postData(`posts/pagination/profile/${id}`,pagination);
+    //console.log("Posts data:", postData);
     if(postData) {
-      setPost(postData);
+      setPosts(postData);
     }
   }
 
@@ -74,7 +96,7 @@ function ProfilePage() {
           <h2 style={{textAlign:"center"}}>PROFILE'S POST</h2>
           <div className='post-page'>
             {posts?.map((post) => (
-              <Post post={post} refreshPosts={refreshPosts} key={post?.id}/>
+              <Post post={post} updatePost={updatePost} removePost={removePost} key={post?.id}/>
             ))}
           </div>
           

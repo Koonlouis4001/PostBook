@@ -43,12 +43,13 @@ class ApiConnection {
 
   async getNewAccessToken(url) {
     let refreshToken = `Bearer ${localStorage.getItem('refreshToken')}`;
-    let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: refreshToken}}).catch(async function (error) {
+    let response = await axios.get(process.env.REACT_APP_SERVER_URL + url,{headers: {'Content-Type': 'application/json',Authorization: refreshToken}}).catch(async function (error) {
       localStorage.clear();
       if(window.location.pathname !== '/login'){
         window.location.pathname = '/login';
       }
     });
+    console.log(response);
     if(response?.data) {
       await this.tokenToData(response);
     }
@@ -61,7 +62,7 @@ class ApiConnection {
   }
 
   async authen(url,data) {
-    let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json'}}).then(async (res) => await this.tokenToData(res)).catch(function (error) {
+    let response = await axios.post(process.env.REACT_APP_SERVER_URL + url,data,{headers: {'Content-Type': 'application/json'}}).then(async (res) => await this.tokenToData(res)).catch(function (error) {
       return(error.response);
     });
     return response?.data;
@@ -70,6 +71,7 @@ class ApiConnection {
   getTokenData(accessToken) {
     if(!accessToken) return [];
     const decodeToken = jwtDecode(accessToken);
+    console.log(decodeToken);
     return [decodeToken.id,decodeToken.profileId];
   }
 
@@ -105,7 +107,7 @@ class ApiConnection {
 
   async getFile(url) {
     let authorizationToken = await this.getAuthorization();
-    let response = await axios.get(url,{headers: {'Content-Type': 'multipart/form-data',Authorization: authorizationToken},responseType: "blob"}).catch(async function (error) {
+    let response = await axios.get(process.env.REACT_APP_SERVER_URL + url,{headers: {'Content-Type': 'multipart/form-data',Authorization: authorizationToken},responseType: "blob"}).catch(async function (error) {
       let errorResponse = await (error.response.data.text());
       return(JSON.parse(errorResponse));
     });
@@ -117,7 +119,7 @@ class ApiConnection {
 
   async getData(url) {
     let authorizationToken = await this.getAuthorization();
-    let response = await axios.get(url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
+    let response = await axios.get(process.env.REACT_APP_SERVER_URL + url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
       return(error.response);
     });
     return response?.data;
@@ -125,7 +127,7 @@ class ApiConnection {
 
   async postData(url,data) {
     let authorizationToken = await this.getAuthorization();
-    let response = await axios.post(url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
+    let response = await axios.post(process.env.REACT_APP_SERVER_URL + url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
       return(error.response);
     });
     return response?.data;
@@ -137,7 +139,7 @@ class ApiConnection {
     for(let key in data) {
       formData.append(key,data[key])
     }
-    let response = await axios.post(url,formData,{headers: {'Content-Type': 'multipart/form-data',Authorization: authorizationToken}}).catch(function (error) {
+    let response = await axios.post(process.env.REACT_APP_SERVER_URL + url,formData,{headers: {'Content-Type': 'multipart/form-data',Authorization: authorizationToken}}).catch(function (error) {
       return(error.response?.data);
     });
     return response;
@@ -145,7 +147,7 @@ class ApiConnection {
 
   async patchData(url,data) {
     let authorizationToken = await this.getAuthorization();
-    let response = await axios.patch(url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
+    let response = await axios.patch(process.env.REACT_APP_SERVER_URL + url,data,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
       return(error.response?.data);
     });
     return response;
@@ -153,7 +155,7 @@ class ApiConnection {
 
   async deleteData(url) {
     let authorizationToken = await this.getAuthorization();
-    let response = await axios.delete(url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
+    let response = await axios.delete(process.env.REACT_APP_SERVER_URL + url,{headers: {'Content-Type': 'application/json',Authorization: authorizationToken}}).catch(function (error) {
       return(error.response);
     });
     return response?.data;

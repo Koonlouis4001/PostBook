@@ -8,7 +8,10 @@ function PostImage({id}) {
     const [image,setImage] = useState(undefined);
 
     const showImage = async () => {
-        let data = await apiConnection.getFile(`http://localhost:3000/posts/image/${id}`);
+        if(id === undefined || id === null) {
+            return;
+        }
+        let data = await apiConnection.getFile(`posts/image/${id}`);
         if(data !== undefined) {
             var blobURL = URL.createObjectURL(data);
             setImage(blobURL);

@@ -5,7 +5,11 @@ import ApiConnection from "../../ApiConnection";
 import Notification from "../Notification/Notification";
 import { Context } from "../../Context";
 
-function Input({refreshPosts}) {
+Input.propTypes = {
+    addPost: PropTypes.func.isRequired,
+}
+
+function Input({addPost}) {
     const modelInput = {
         title: "",
     };
@@ -18,15 +22,15 @@ function Input({refreshPosts}) {
 
     const apiConnection = new ApiConnection;
 
-    const addPost = async (input) => {
+    const add = async (input) => {
         if(profileId) {
-            let data = await apiConnection.postDataWithFile(`http://localhost:3000/posts/upload/${profileId}`,input);
-            if(data?.status === 200 || data?.status === 201) {
+            let result = await apiConnection.postDataWithFile(`posts/upload/${profileId}`,input);
+            if(result?.status === 200 || result?.status === 201) {
                 setPostMenu(false);
-                refreshPosts();
+                addPost(result.data);
             }
             else {
-                setWarning(data.message);
+                setWarning(result.message);
             }
         }
     }
@@ -62,7 +66,7 @@ function Input({refreshPosts}) {
                             <input type="file" name="file" onChange={(e) => handleChange(e,input,setInput)}/>
                         </div>
                         <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                            <button className="login-button" onClick={()=>addPost(input)}>Create</button>
+                            <button className="login-button" onClick={()=>add(input)}>Create</button>
                         </div>
                     </div>
                 </div>
@@ -83,10 +87,6 @@ function Input({refreshPosts}) {
             </div>
         </div>
     )
-}
-
-Input.propTypes = {
-    refreshPosts: PropTypes.func.isRequired,
 }
 
 export default Input;

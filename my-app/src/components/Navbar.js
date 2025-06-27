@@ -9,7 +9,7 @@ function Navbar() {
     const location = new useLocation();
 
     const logout = async () => {
-        await apiConnection.logout(`http://localhost:3000/authen/logout`);
+        await apiConnection.logout(`authen/logout`);
         navigate('/login');
     }
     return (location.pathname !== '/login' &&
