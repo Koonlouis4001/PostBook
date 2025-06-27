@@ -1,4 +1,4 @@
-this is just my practice project to create facebook-like website using react,nest js,PostgresSQL and docker to help me more proficient in using these technology more.
+this is just my practice project to create my own version of facebook-like web application using react,nest js,PostgresSQL and docker to help me more proficient in using these technology more.
 
 React for front-end,
 Nest Js for back-end,
