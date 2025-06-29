@@ -12,15 +12,17 @@ function Navbar() {
         await apiConnection.logout(`authen/logout`);
         navigate('/login');
     }
-    return (location.pathname !== '/login' &&
+    return (
         <div className="navbar-container">
             <div className="navbar">
                 <div>PostBook</div>
-                <div className="page-link">
+                { 
+                location.pathname !== '/login' &&<div className="page-link">
                     <Link to={'/'}>Post</Link>
                     <Link to={'/profile/'}>Profile</Link>
                     <a onClick={() => (logout())}>Logout</a>
-                </div>
+                </div> 
+                }
             </div>
         </div>
     );
