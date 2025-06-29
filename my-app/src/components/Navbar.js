@@ -15,7 +15,7 @@ function Navbar() {
     return (location.pathname !== '/login' &&
         <div className="navbar-container">
             <div className="navbar">
-                <div>Postbook</div>
+                <div>PostBook</div>
                 <div className="page-link">
                     <Link to={'/'}>Post</Link>
                     <Link to={'/profile/'}>Profile</Link>

@@ -81,11 +81,12 @@ function Input({addPost}) {
                 <div className="post-profile-image">
                     <img src={profileImage} alt="user"/>
                 </div>
-                <div className="input-button" onClick={() => handlePostMenu()}>
+               <div className="input-button" onClick={() => handlePostMenu()}>
                     {localStorage.getItem('profileName')} คุณกำลังคิดอะไรอยู่?
-                </div>
+               </div>
             </div>
         </div>
+        
     )
 }
 

@@ -76,12 +76,13 @@ function PostPage() {
     paginationPosts();
   },[pagination])
 
-  useEffect(()=> {
-    console.log("Posts updated:", posts);
-  },[posts])
+  // useEffect(()=> {
+  //   console.log("Posts updated:", posts);
+  // },[posts])
 
   useEffect(() => {
     if(profileId === undefined || profileId === null) {
+      //console.log("register required");
       navigate('/register');
     }
   },[userId,profileId]);
@@ -89,9 +90,12 @@ function PostPage() {
   return (
     <Context.Provider value={{userId,profileId}}>
       <div className="post-page">
-        {/* <button className="btn btn-primary" onClick={nextPage}>Next Page</button> */}
         <Input addPost={addPost}/>
-        {posts?.map((post) => (<Post post={post} updatePost={updatePost} removePost={removePost} key={post?.id}/>))}
+        {/* <button className="btn btn-primary" onClick={nextPage}>Next Page</button> */}
+        <div className="post-container">
+          {posts?.map((post) => (<Post post={post} updatePost={updatePost} removePost={removePost} key={post?.id}/>))}
+          <button className='next-post-button' onClick={() => nextPage()}>next post</button>
+        </div>
       </div>
     </Context.Provider>
   );

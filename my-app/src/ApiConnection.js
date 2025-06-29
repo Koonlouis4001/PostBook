@@ -10,6 +10,7 @@ class ApiConnection {
     try {
       const decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000;
+      //console.log(decodedToken);
       return decodedToken.exp < currentTime;
     } catch (error) {
       console.error('Error decoding token:', error);
@@ -20,21 +21,25 @@ class ApiConnection {
   async isAuthen() {
     if (localStorage.getItem('accessToken') && localStorage.getItem('refreshToken')) {
       const token = localStorage.getItem('accessToken');
+      //console.log(token);
       const refreshToken = localStorage.getItem('refreshToken');
+      //console.log(refreshToken);
       if (this.isTokenExpired(token)) {
         if(this.isTokenExpired(refreshToken)) {
+          //console.log("refresh expired");
           localStorage.clear();
           if(window.location.pathname !== '/login'){
             window.location.pathname = '/login'
           }
         }
         else {
-          await this.getNewAccessToken(`http://localhost:3000/authen/refresh`);
+          await this.getNewAccessToken(`authen/refresh`);
         }
       }
     } 
     else {
       localStorage.clear();
+      //console.log("no access token and refresh token found");
       if(window.location.pathname !== '/login'){
         window.location.pathname = '/login'
       }
@@ -44,12 +49,13 @@ class ApiConnection {
   async getNewAccessToken(url) {
     let refreshToken = `Bearer ${localStorage.getItem('refreshToken')}`;
     let response = await axios.get(process.env.REACT_APP_SERVER_URL + url,{headers: {'Content-Type': 'application/json',Authorization: refreshToken}}).catch(async function (error) {
+      console.log(error);
       localStorage.clear();
       if(window.location.pathname !== '/login'){
         window.location.pathname = '/login';
       }
     });
-    console.log(response);
+    //console.log(response);
     if(response?.data) {
       await this.tokenToData(response);
     }
@@ -71,7 +77,7 @@ class ApiConnection {
   getTokenData(accessToken) {
     if(!accessToken) return [];
     const decodeToken = jwtDecode(accessToken);
-    console.log(decodeToken);
+    //console.log(decodeToken);
     return [decodeToken.id,decodeToken.profileId];
   }
 
@@ -83,8 +89,9 @@ class ApiConnection {
     localStorage.setItem('userName',decodeToken.userName);
     //localStorage.setItem('profileId',decodeToken.profileId);
     localStorage.setItem('profileName',decodeToken.profileName);
+    //console.log("Decode Token : " + decodeToken);
     if(decodeToken.profileId !== null && decodeToken.profileId !== undefined) {
-      const profileImage = await this.getFile(`http://localhost:3000/profile/image/${decodeToken.profileId}`);
+      const profileImage = await this.getFile(`profile/image/${decodeToken.profileId}`);
       if(profileImage) {
         localStorage.setItem('profileImage',URL.createObjectURL(profileImage));
       }

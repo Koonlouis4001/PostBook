@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useRef, useEffect, useState} from 'react';
 import '../App.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import ApiConnection from '../ApiConnection';
@@ -15,14 +15,25 @@ function ProfilePage() {
   const [profile,setProfile] = useState();
   const [profileImage,setProfileImage] = useState();
   const [posts,setPosts] = useState([]);
+  const initialized = useRef(false);
 
   const [pagination,setPagination] = useState({
     page: 1,
     row: 10,
   })
 
+  const paginationPosts = async () => {
+    console.log(pagination)
+    let data = await apiConnection.postData(`posts/pagination/profile/${id}`,pagination);
+    if(data?.message === undefined || data?.message === null) {
+      setPosts((prevPosts) => {
+        const newPosts = data.filter((d) => !prevPosts.includes(d));
+        return [...prevPosts, ...newPosts];
+      });
+    }
+  }
+
   const updatePost = (post) => {
-    //console.log("Post updated:", post);
     setPosts((prevPosts) => {
       return prevPosts.map((p) => {
         if(p.id === post.id) {
@@ -33,10 +44,15 @@ function ProfilePage() {
     });
   }
 
-  const removePost =  (postId) => {
-    //console.log("Post remove:", postId);
+  const removePost =  (id) => {
     setPosts((prevPosts) => {
-      return prevPosts.filter((p) => p.id !== postId);
+      return prevPosts.filter((p) => p.id !== id);
+    });
+  }
+
+  const nextPage = async () => {
+    setPagination((prevPagination) => {
+      return {...prevPagination, page: prevPagination.page + 1};
     });
   }
 
@@ -53,18 +69,17 @@ function ProfilePage() {
     setProfile(profileData);
   }
 
-  const refreshPosts = async () => {
-    let postData = await apiConnection.postData(`posts/pagination/profile/${id}`,pagination);
-    //console.log("Posts data:", postData);
-    if(postData) {
-      setPosts(postData);
-    }
-  }
-
   useEffect(()=> {
     if(id !== undefined) {
       getProfile();
-      refreshPosts();
+      if(!initialized.current) {
+        setPagination((prevPagination) => {
+          return {...prevPagination, page: 1};
+        });
+        setPosts([]);
+        paginationPosts();
+        initialized.current = true;
+      }
     }
     else if (profileId !== undefined){
       setProfileImage();
@@ -73,8 +88,15 @@ function ProfilePage() {
   },[id])
 
   useEffect(()=> {
-    console.log(posts,posts?.length);
-  },[posts])
+    if(pagination.page === 1) {
+      return;
+    }
+    paginationPosts();
+  },[pagination])
+
+  // useEffect(()=> {
+  //   console.log(posts,posts?.length);
+  // },[posts])
 
   return (
     <div className="app">
@@ -94,10 +116,13 @@ function ProfilePage() {
         </div>
         <div>
           <h2 style={{textAlign:"center"}}>PROFILE'S POST</h2>
-          <div className='post-page'>
+          <div className='profile-post-page'>
+            <div className="profile-post-container">
             {posts?.map((post) => (
               <Post post={post} updatePost={updatePost} removePost={removePost} key={post?.id}/>
             ))}
+            <button className='next-post-button' onClick={() => nextPage()}>next post</button>
+            </div>
           </div>
           
         </div>

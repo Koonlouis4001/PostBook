@@ -55,9 +55,9 @@ const ProfileRegisterWindow = ({modelProfile}) => {
             <div>
               <input className="login-input" type="text" name="profileStatus" placeholder="Profile Status" value={registerProfile.profileStatus} onChange={(e) => handleChange(e,registerProfile,setRegisterProfile)}/>
             </div>
-            <div>
+            {/* <div>
               <input type="file" name="picture" onChange={(e) => handleChange(e,registerProfile,setRegisterProfile)}/>
-            </div>
+            </div> */}
             <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
               <button className="login-button" onClick={()=>register()}>Register</button>
             </div>
