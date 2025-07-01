@@ -4,8 +4,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcryptjs'
-import { LoginUserDto } from './dto/login-user.dto';
 import { instanceToPlain } from 'class-transformer';
 
 @Injectable()

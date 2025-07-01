@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterc
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { AuthGuard } from 'src/authen/authen.guard';
+import { AuthGuard } from '../authen/authen.guard';
 import { FileInterceptor, NoFilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { join } from 'path';

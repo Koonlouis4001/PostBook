@@ -3,12 +3,10 @@ import { SignUpAuthenDto } from './dto/sign-up-authen.dto';
 import { SignInAuthenDto } from './dto/sign-in-authen.dto';
 import * as bcrypt from 'bcryptjs'
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import { UserService } from '../user/user.service';
+import { UpdateUserDto } from '../user/dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { Authen } from './entities/authen.entity';
 

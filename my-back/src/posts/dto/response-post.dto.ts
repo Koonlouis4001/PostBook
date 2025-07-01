@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { ResponseProfileDto } from 'src/profile/dto/response-profile.dto';
+import { ResponseProfileDto } from '../../profile/dto/response-profile.dto';
 
 export class ResponsePostDto {
   @Expose()

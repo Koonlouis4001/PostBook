@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Post } from "src/posts/entities/posts.entity";
-import { User } from "src/user/entities/user.entity";
+import { Post } from "../../posts/entities/posts.entity";
+import { User } from "../../user/entities/user.entity";
 import { Expose } from "class-transformer";
 
 @Entity({ name: 'profile' })

@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { Profile } from "src/profile/entities/profile.entity";
+import { Profile } from "../../profile/entities/profile.entity";
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity({ name: 'user' })

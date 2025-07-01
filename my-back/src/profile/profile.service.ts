@@ -5,7 +5,7 @@ import { Profile } from './entities/profile.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class ProfileService {
@@ -21,6 +21,23 @@ export class ProfileService {
     profile.profileStatus = createProfileDto.profileStatus;
     profile.created = currentDateTime;
     profile.modified = currentDateTime;
+    const createProfile = await this.profileRepository.save(profile);
+    const user : User = await this.userRepository.findOneBy({id: createProfileDto.userId});
+    user.profile = createProfile;
+    const updateUser = await this.userRepository.save(user);
+    return instanceToPlain(createProfile,{ strategy: 'excludeAll'});
+  }
+
+  async createWithFile(createProfileDto: CreateProfileDto, file: Express.Multer.File) {
+    const profile : Profile = new Profile();
+    const currentDateTime = new Date();
+    profile.profileName = createProfileDto.profileName;
+    profile.profileStatus = createProfileDto.profileStatus;
+    profile.created = currentDateTime;
+    profile.modified = currentDateTime;
+    if(file !== undefined) {
+      profile.picture = file.buffer;
+    }
     const createProfile = await this.profileRepository.save(profile);
     const user : User = await this.userRepository.findOneBy({id: createProfileDto.userId});
     user.profile = createProfile;

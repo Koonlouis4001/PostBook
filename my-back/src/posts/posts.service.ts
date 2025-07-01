@@ -4,7 +4,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/posts.entity';
-import { Profile } from 'src/profile/entities/profile.entity';
+import { Profile } from '../profile/entities/profile.entity';
 import { instanceToPlain } from 'class-transformer';
 import { PaginationPostDto } from './dto/pagination-post.dto';
 
