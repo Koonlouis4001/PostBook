@@ -6,6 +6,7 @@ import { AuthGuard } from '../authen/authen.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 const fileTypeRegex : RegExp = new RegExp(process.env.UPLOAD_FILE_TYPES || 'image/jpeg|image/png');
+const maxFileSize : number = Number(process.env.UPLOAD_FILE_SIZE) || 1000000;
 
 @Controller('profile')
 @UseGuards(AuthGuard)
@@ -21,7 +22,7 @@ export class ProfileController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  createWithProfile(@Body() createProfileDto: CreateProfileDto, @UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: fileTypeRegex,}).addMaxSizeValidator({maxSize: 1000000})
+  createWithProfile(@Body() createProfileDto: CreateProfileDto, @UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: fileTypeRegex,}).addMaxSizeValidator({maxSize: maxFileSize})
   .build({errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY, fileIsRequired: true}),) file: Express.Multer.File) {
     return this.profileService.createWithFile(createProfileDto, file);
   }
@@ -43,7 +44,7 @@ export class ProfileController {
 
   @Patch('upload/:id')
   @UseInterceptors(FileInterceptor('file'))
-  updateWithFile(@Param('id') id: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: fileTypeRegex,}).addMaxSizeValidator({maxSize: 1000000})
+  updateWithFile(@Param('id') id: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: fileTypeRegex,}).addMaxSizeValidator({maxSize: maxFileSize})
   .build({errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,fileIsRequired: true}),) file: Express.Multer.File) {
     return this.profileService.updateWithFile(id,file);
   }

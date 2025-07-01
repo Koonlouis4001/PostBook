@@ -8,6 +8,9 @@ import { createReadStream } from 'fs';
 import { join } from 'path';
 import { PaginationPostDto } from './dto/pagination-post.dto';
 
+const fileTypeRegex : RegExp = new RegExp(process.env.UPLOAD_FILE_TYPES || 'image/jpeg|image/png');
+const maxFileSize = Number(process.env.UPLOAD_FILE_SIZE) || 1000000;
+
 @Controller('posts')
 @UseGuards(AuthGuard)
 export class PostsController {
@@ -15,7 +18,7 @@ export class PostsController {
 
   @Post('upload/:profileId')
   @UseInterceptors(FileInterceptor('file'))
-  createWithFile(@Param('profileId') profileId: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: 'jpeg',}).addMaxSizeValidator({maxSize: 1000000})
+  createWithFile(@Param('profileId') profileId: number,@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({fileType: fileTypeRegex,}).addMaxSizeValidator({maxSize: maxFileSize})
   .build({errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,fileIsRequired: false}),) file: Express.Multer.File,@Body() createPostDto: CreatePostDto) {
     return this.postsService.createWithFile(profileId,file,createPostDto);
   }
