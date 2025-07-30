@@ -16,6 +16,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         database: process.env.DATABASE_NAME,
         synchronize: process.env.DATABASE_SYNCHRONIZABLE.toLowerCase() === 'true',
         entities: ['dist/**/entities/*.entity.js'],
+        ...(process.env.DATABASE_SSL.toLowerCase() === 'true' && {
+          ssl: { rejectUnauthorized: false },
+          extra: { ssl: { rejectUnauthorized: false } },
+        }),
       }),
     }),
   ],
